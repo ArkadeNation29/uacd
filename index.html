@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Animash DB</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;800&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0a0a0f;
+      --surface: #12121a;
+      --surface2: #1a1a26;
+      --border: #2a2a3d;
+      --accent: #7c6aff;
+      --accent2: #ff6a9b;
+      --accent3: #6affca;
+      --text: #e8e8f0;
+      --text-dim: #7a7a9a;
+      --card-bg: #0f0f1a;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Syne', sans-serif;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    .orb {
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(80px);
+      pointer-events: none;
+      z-index: 0;
+    }
+    .orb-1 { width: 400px; height: 400px; background: rgba(124,106,255,0.12); top: -100px; left: -100px; }
+    .orb-2 { width: 300px; height: 300px; background: rgba(255,106,155,0.08); bottom: 100px; right: -50px; }
+    .orb-3 { width: 250px; height: 250px; background: rgba(106,255,202,0.06); top: 40%; left: 60%; }
+
+    .hero {
+      position: relative;
+      z-index: 1;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+      text-align: center;
+    }
+
+    .hero-tag {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--accent3);
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      border: 1px solid rgba(106,255,202,0.25);
+      padding: 0.3rem 0.9rem;
+      border-radius: 999px;
+      margin-bottom: 2rem;
+      opacity: 0;
+      animation: fadeUp 0.6s ease forwards 0.2s;
+    }
+
+    .hero-title {
+      font-size: clamp(3rem, 10vw, 7rem);
+      font-weight: 800;
+      line-height: 0.95;
+      letter-spacing: -0.03em;
+      margin-bottom: 1.2rem;
+      opacity: 0;
+      animation: fadeUp 0.6s ease forwards 0.4s;
+    }
+
+    .hero-title span.hl {
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero-sub {
+      font-size: 1rem;
+      color: var(--text-dim);
+      max-width: 400px;
+      line-height: 1.7;
+      margin-bottom: 3rem;
+      opacity: 0;
+      animation: fadeUp 0.6s ease forwards 0.6s;
+    }
+
+    .search-wrap {
+      width: 100%;
+      max-width: 560px;
+      opacity: 0;
+      animation: fadeUp 0.6s ease forwards 0.8s;
+    }
+
+    .search-box {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 1.2rem;
+      color: var(--text-dim);
+      font-size: 1.1rem;
+      pointer-events: none;
+    }
+
+    .search-input {
+      width: 100%;
+      background: var(--surface);
+      border: 1.5px solid var(--border);
+      border-radius: 14px;
+      padding: 1rem 1.2rem 1rem 3.2rem;
+      font-size: 1rem;
+      font-family: 'Syne', sans-serif;
+      color: var(--text);
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .search-input::placeholder { color: var(--text-dim); }
+
+    .search-input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(124,106,255,0.15);
+    }
+
+    .search-hint {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.68rem;
+      color: var(--text-dim);
+      margin-top: 0.75rem;
+      text-align: left;
+      padding-left: 0.3rem;
+    }
+
+    .scroll-hint {
+      position: absolute;
+      bottom: 2.5rem;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.4rem;
+      color: var(--text-dim);
+      font-family: 'Space Mono', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.15em;
+      opacity: 0;
+      animation: fadeUp 0.6s ease forwards 1.2s;
+    }
+
+    .scroll-arrow {
+      width: 1px;
+      height: 32px;
+      background: linear-gradient(to bottom, var(--accent), transparent);
+      animation: scrollPulse 1.8s ease infinite;
+    }
+
+    .results-section {
+      position: relative;
+      z-index: 1;
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 1.5rem 5rem;
+      display: none;
+    }
+
+    .results-section.visible { display: block; }
+
+    .results-header {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.72rem;
+      color: var(--text-dim);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 1.5rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .results-header span { color: var(--accent3); }
+
+    .results-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 1rem;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.2rem;
+      display: flex;
+      gap: 1rem;
+      align-items: flex-start;
+      cursor: pointer;
+      transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
+      animation: fadeUp 0.35s ease forwards;
+      opacity: 0;
+    }
+
+    .card:hover {
+      border-color: var(--accent);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 30px rgba(124,106,255,0.12);
+    }
+
+    .card-thumb {
+      width: 56px;
+      height: 56px;
+      border-radius: 8px;
+      background: var(--surface2);
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.8rem;
+      overflow: hidden;
+    }
+
+    .card-thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      image-rendering: pixelated;
+    }
+
+    .card-info { flex: 1; min-width: 0; }
+
+    .card-name {
+      font-weight: 700;
+      font-size: 0.95rem;
+      margin-bottom: 0.2rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .card-combo {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.65rem;
+      color: var(--text-dim);
+      margin-bottom: 0.5rem;
+    }
+
+    .card-tier {
+      display: inline-block;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.6rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      padding: 0.2rem 0.55rem;
+      border-radius: 6px;
+      text-transform: uppercase;
+    }
+
+    .tier-s { background: rgba(255,200,50,0.15); color: #ffc832; border: 1px solid rgba(255,200,50,0.3); }
+    .tier-a { background: rgba(124,106,255,0.15); color: var(--accent); border: 1px solid rgba(124,106,255,0.3); }
+    .tier-b { background: rgba(106,255,202,0.1); color: var(--accent3); border: 1px solid rgba(106,255,202,0.25); }
+    .tier-c { background: rgba(255,106,155,0.1); color: var(--accent2); border: 1px solid rgba(255,106,155,0.25); }
+    .tier-d { background: rgba(122,122,154,0.1); color: var(--text-dim); border: 1px solid var(--border); }
+
+    .no-results {
+      text-align: center;
+      padding: 3rem 1rem;
+      color: var(--text-dim);
+      font-family: 'Space Mono', monospace;
+      font-size: 0.8rem;
+      grid-column: 1 / -1;
+    }
+
+    .no-results .icon { font-size: 2.5rem; margin-bottom: 1rem; }
+
+    .footer {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      padding: 2rem;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.65rem;
+      color: var(--text-dim);
+      border-top: 1px solid var(--border);
+    }
+
+    .footer a { color: var(--accent); text-decoration: none; }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes scrollPulse {
+      0%, 100% { opacity: 0.4; }
+      50% { opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+
+  <section class="hero" id="hero">
+    <div class="hero-tag">Community Database</div>
+    <h1 class="hero-title">Animash<br><span class="hl">Database</span></h1>
+    <p class="hero-sub">Temukan semua kombinasi fusion, tier, dan data animash dalam satu tempat.</p>
+
+    <div class="search-wrap">
+      <div class="search-box">
+        <span class="search-icon">⌕</span>
+        <input
+          class="search-input"
+          id="searchInput"
+          type="text"
+          placeholder="Cari animash, item, atau kombinasi..."
+          autocomplete="off"
+          spellcheck="false"
+        />
+      </div>
+      <p class="search-hint">// ketik nama animash atau item untuk mulai pencarian</p>
+    </div>
+
+    <div class="scroll-hint" id="scrollHint">
+      scroll
+      <div class="scroll-arrow"></div>
+    </div>
+  </section>
+
+  <section class="results-section" id="resultsSection">
+    <div class="results-header">
+      — <span id="resultsCount">0</span> hasil ditemukan
+    </div>
+    <div class="results-grid" id="resultsGrid"></div>
+  </section>
+
+  <footer class="footer">
+    animash-db &middot; community data &middot; <a href="https://github.com" target="_blank">github</a>
+  </footer>
+
+  <script>
+    // ===== DATA =====
+    // Sample data — nanti ganti dengan fetch('./data.json')
+    let ANIMASH_DATA = [
+      { id: 1, name: "Flamara", combo: ["Flarix", "Mara"], tier: "S", emoji: "🔥" },
+      { id: 2, name: "Aquhorn", combo: ["Aqua", "Thornix"], tier: "A", emoji: "💧" },
+      { id: 3, name: "Terravolt", combo: ["Terran", "Voltix"], tier: "A", emoji: "⚡" },
+      { id: 4, name: "Glaciara", combo: ["Glace", "Mara"], tier: "B", emoji: "❄️" },
+      { id: 5, name: "Pyrohorn", combo: ["Flarix", "Thornix"], tier: "S", emoji: "🌋" },
+      { id: 6, name: "Windara", combo: ["Windar", "Mara"], tier: "C", emoji: "🌀" },
+      { id: 7, name: "Stonequa", combo: ["Stone", "Aqua"], tier: "B", emoji: "🪨" },
+      { id: 8, name: "Lumirix", combo: ["Lumin", "Flarix"], tier: "S", emoji: "✨" },
+      { id: 9, name: "Darkhorn", combo: ["Darko", "Thornix"], tier: "A", emoji: "🌑" },
+      { id: 10, name: "Breezan", combo: ["Breeza", "Terran"], tier: "D", emoji: "🍃" },
+    ];
+
+    // Uncomment ini kalau sudah ada data.json di repo:
+    // fetch('./data.json')
+    //   .then(r => r.json())
+    //   .then(data => { ANIMASH_DATA = data; })
+    //   .catch(console.error);
+
+    // ===== RENDER =====
+    const input = document.getElementById('searchInput');
+    const section = document.getElementById('resultsSection');
+    const grid = document.getElementById('resultsGrid');
+    const countEl = document.getElementById('resultsCount');
+    const scrollHint = document.getElementById('scrollHint');
+
+    function renderCard(item, delay) {
+      const div = document.createElement('div');
+      div.className = 'card';
+      div.style.animationDelay = delay + 'ms';
+
+      const thumb = item.image
+        ? `<img src="${item.image}" alt="${item.name}" />`
+        : item.emoji || '?';
+
+      div.innerHTML = `
+        <div class="card-thumb">${typeof thumb === 'string' && item.image ? thumb : (item.emoji || '?')}</div>
+        <div class="card-info">
+          <div class="card-name">${item.name}</div>
+          <div class="card-combo">${item.combo[0]} + ${item.combo[1]}</div>
+          <span class="card-tier tier-${item.tier.toLowerCase()}">Tier ${item.tier}</span>
+        </div>
+      `;
+      return div;
+    }
+
+    function search(query) {
+      const q = query.trim().toLowerCase();
+
+      if (!q) {
+        section.classList.remove('visible');
+        scrollHint.style.display = '';
+        return;
+      }
+
+      scrollHint.style.display = 'none';
+
+      const results = ANIMASH_DATA.filter(item =>
+        item.name.toLowerCase().includes(q) ||
+        item.combo.some(c => c.toLowerCase().includes(q)) ||
+        item.tier.toLowerCase() === q
+      );
+
+      grid.innerHTML = '';
+      countEl.textContent = results.length;
+      section.classList.add('visible');
+
+      if (results.length === 0) {
+        grid.innerHTML = `<div class="no-results">
+          <div class="icon">🔍</div>
+          Tidak ada hasil untuk "<strong>${query}</strong>"
+        </div>`;
+        return;
+      }
+
+      results.forEach((item, i) => {
+        grid.appendChild(renderCard(item, i * 50));
+      });
+
+      setTimeout(() => {
+        section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 100);
+    }
+
+    let debounceTimer;
+    input.addEventListener('input', e => {
+      clearTimeout(debounceTimer);
+      debounceTimer = setTimeout(() => search(e.target.value), 200);
+    });
+  </script>
+</body>
+</html>
