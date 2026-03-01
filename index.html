@@ -354,24 +354,13 @@
   <script>
     // ===== DATA =====
     // Sample data — nanti ganti dengan fetch('./data.json')
-    let ANIMASH_DATA = [
-      { id: 1, name: "Flamara", combo: ["Flarix", "Mara"], tier: "S", emoji: "🔥" },
-      { id: 2, name: "Aquhorn", combo: ["Aqua", "Thornix"], tier: "A", emoji: "💧" },
-      { id: 3, name: "Terravolt", combo: ["Terran", "Voltix"], tier: "A", emoji: "⚡" },
-      { id: 4, name: "Glaciara", combo: ["Glace", "Mara"], tier: "B", emoji: "❄️" },
-      { id: 5, name: "Pyrohorn", combo: ["Flarix", "Thornix"], tier: "S", emoji: "🌋" },
-      { id: 6, name: "Windara", combo: ["Windar", "Mara"], tier: "C", emoji: "🌀" },
-      { id: 7, name: "Stonequa", combo: ["Stone", "Aqua"], tier: "B", emoji: "🪨" },
-      { id: 8, name: "Lumirix", combo: ["Lumin", "Flarix"], tier: "S", emoji: "✨" },
-      { id: 9, name: "Darkhorn", combo: ["Darko", "Thornix"], tier: "A", emoji: "🌑" },
-      { id: 10, name: "Breezan", combo: ["Breeza", "Terran"], tier: "D", emoji: "🍃" },
-    ];
+    let ANIMASH_DATA = [];
 
     // Uncomment ini kalau sudah ada data.json di repo:
-    // fetch('./data.json')
-    //   .then(r => r.json())
-    //   .then(data => { ANIMASH_DATA = data; })
-    //   .catch(console.error);
+    fetch('./data.json')
+       .then(r => r.json())
+       .then(data => { ANIMASH_DATA = data; })
+       .catch(console.error);
 
     // ===== RENDER =====
     const input = document.getElementById('searchInput');
