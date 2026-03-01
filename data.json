@@ -1,5 +1,9 @@
 [
   {
-    
+    "id":"1",
+    "name":"Venocore",
+    "combo":["Uranium","Cobra"],
+    "tier":"Divine",
+    "image":"img/venocore.png"
   }
 ]
