@@ -4,8 +4,8 @@
     "name":"Venocore",
     "combo":["Uranium","Cobra"],
     "tier":"Divine",
-    "image":"img/venocore.jpg"
-    "lore":""
+    "image":"img/venocore.jpg",
+    "lore":"",
     "skills":""
   }
   {
@@ -13,7 +13,7 @@
     "name":"Infernium",
     "combo":["Uranium","Lava"],
     "tier":"Common",
-    "image":"img/infernium.jpg"
+    "image":"img/infernium.jpg",
     "lore":"Infernium forms deep beneath the
 earth's crust, where volcanic
 activity meets rich uranium
@@ -22,13 +22,21 @@ potent hybrid. Due to its unique
 composition, Infernium emits a
 low level of radiation combined
 with intense heat, making it a
-source of both energy and danger"
-          skills: [
-          { name: "Ember Strike", type: "skill1", hits: [{ effects: ["direct_hit"] }] },
-          { name: "Heat Aura", type: "skill2", hits: [{ effects: ["buff", "dot"] }] },
-          { name: "Twin Flame", type: "skill3", hits: [{ effects: ["direct_hit", "aoe"] }, { effects: ["dot", "nerf"] }] },
-          { name: "Inferno Nova", type: "ultimate", unlock_level: 25, hits: [{ effects: ["aoe", "dot", "stun"] }, { effects: ["aoe", "dot", "nerf"] }] }
-        ]
-    "skills":""
+source of both energy and danger",
+    "skills": [
+            { "name": "Ember Strike", 
+              "type": "skill1", 
+              "hits": [{ effects: ["direct_hit"] }] },
+            { "name": "Heat Aura", 
+              "type": "skill2", 
+              "hits": [{ effects: ["buff", "dot"] }] },
+            { "name": "Twin Flame", 
+              "type": "skill3", 
+              "hits": [{ effects: ["direct_hit", "aoe"] }, { effects: ["dot", "nerf"] }] },
+            { "name": "Inferno Nova", 
+              "type": "ultimate", 
+              "unlock_level": 25, 
+              "hits": [{ effects: ["aoe", "dot", "stun"] }, { effects: ["aoe", "dot", "nerf"] }] }
+            ]
   }
 ]
