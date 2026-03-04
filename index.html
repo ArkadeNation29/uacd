@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Animash DB</title>
+  <title>Animash / Mashy Pet DB</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;800&display=swap" rel="stylesheet">
   <style>
@@ -272,6 +272,39 @@
     .tier-b { background: rgba(106,255,202,0.1); color: var(--accent3); border: 1px solid rgba(106,255,202,0.25); }
     .tier-c { background: rgba(255,106,155,0.1); color: var(--accent2); border: 1px solid rgba(255,106,155,0.25); }
     .tier-d { background: rgba(122,122,154,0.1); color: var(--text-dim); border: 1px solid var(--border); }
+
+    .card-badges {
+      display: flex;
+      gap: 0.35rem;
+      flex-wrap: wrap;
+      margin-top: 0.5rem;
+    }
+
+    /* Game tags */
+    .game-tag {
+      display: inline-block;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.55rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      padding: 0.2rem 0.5rem;
+      border-radius: 6px;
+      text-transform: uppercase;
+    }
+    .game-animash { background: rgba(124,106,255,0.12); color: var(--accent); border: 1px solid rgba(124,106,255,0.3); }
+    .game-mashy   { background: rgba(255,106,155,0.12); color: var(--accent2); border: 1px solid rgba(255,106,155,0.3); }
+    .game-both    { background: rgba(106,255,202,0.1);  color: var(--accent3); border: 1px solid rgba(106,255,202,0.25); }
+
+    /* Skill slot label */
+    .skill-slot-label {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.55rem;
+      font-weight: 700;
+      color: var(--text-dim);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      flex-shrink: 0;
+    }
 
     /* Animash tiers */
     .tier-common        { background: rgba(180,180,180,0.1); color: #b4b4b4; border: 1px solid rgba(180,180,180,0.25); }
@@ -623,8 +656,8 @@
 
   <section class="hero" id="hero">
     <div class="hero-tag">Community Database</div>
-    <h1 class="hero-title">Ultimate<br><span class="hl">Animash Database</span></h1>
-    <p class="hero-sub">Temukan semua kombinasi combo, tier, dan data animash dalam satu tempat.</p>
+    <h1 class="hero-title">Ultimate<br><span class="hl">Animash / Mashy Pet DB</span></h1>
+    <p class="hero-sub">Temukan semua kombinasi combo, tier, dan data animash & mashy pet dalam satu tempat.</p>
 
     <div class="search-wrap">
       <div class="search-box">
@@ -664,6 +697,7 @@
           <div class="modal-meta">
             <span class="modal-combo" id="modalCombo"></span>
             <span class="card-tier" id="modalTier"></span>
+            <span class="game-tag" id="modalGameTag" style="display:none"></span>
           </div>
         </div>
         <button class="modal-close" id="modalClose">✕</button>
@@ -673,7 +707,7 @@
   </div>
 
   <footer class="footer">
-    animash-db &middot; community data &middot; <a href="https://github.com" target="_blank">github</a>
+    animash / mashy pet db &middot; community data &middot; <a href="https://github.com" target="_blank">github</a>
   </footer>
 
   <script>
@@ -703,8 +737,12 @@
       skill2: "Skill 2",
       special: "Special",
       ultra: "Ultra",
-      timer: "Timer",
-      trap: "Trap",
+    };
+
+    const GAME_LABEL = {
+      animash: 'Animash',
+      mashy: 'Mashy Pet',
+      both: 'Both',
     };
 
     // ===== SEARCH =====
@@ -725,12 +763,19 @@
       const thumbContent = item.image
         ? `<img src="${item.image}" alt="${item.name}" />`
         : (item.emoji || '?');
+      const gameKey = (item.game || '').toLowerCase();
+      const gameHTML = gameKey
+        ? `<span class="game-tag game-${gameKey}">${GAME_LABEL[gameKey] || item.game}</span>`
+        : '';
       div.innerHTML = `
         <div class="card-thumb">${thumbContent}</div>
         <div class="card-info">
           <div class="card-name">${item.name}</div>
           <div class="card-combo">${item.combo[0]} + ${item.combo[1]}</div>
-          <span class="card-tier tier-${normalizeTier(item.tier)}">${item.tier}</span>
+          <div class="card-badges">
+            <span class="card-tier tier-${normalizeTier(item.tier)}">${item.tier}</span>
+            ${gameHTML}
+          </div>
         </div>
       `;
       div.addEventListener('click', () => openModal(item));
@@ -748,7 +793,8 @@
       const results = ANIMASH_DATA.filter(item =>
         item.name.toLowerCase().includes(q) ||
         item.combo.some(c => c.toLowerCase().includes(q)) ||
-        item.tier.toLowerCase() === q
+        item.tier.toLowerCase() === q ||
+        (item.game || '').toLowerCase().includes(q)
       );
       grid.innerHTML = '';
       countEl.textContent = results.length;
@@ -788,7 +834,6 @@
       untouchable: '🛡️',
     };
 
-    // Rate superscripts for buff/nerf
     const RATE_SUP = { 1: '¹', 2: '²', 3: '³' };
 
     const TARGET_LABEL = {
@@ -800,24 +845,17 @@
       atk: 'ATK', def: 'DEF', dodge: 'DODGE', accuracy: 'ACC'
     };
 
-    // Parse effect string
-    // Supports: "nerf", "buff_2", "nerf_atk", "buff_def_2", "nerf_dodge_3"
     function parseEffect(fx) {
       const parts = fx.split('_');
       const last = parts[parts.length - 1];
       const rate = parseInt(last);
       const hasRate = !isNaN(rate);
-
-      // Stat is any part that matches known stats
       const statParts = parts.slice(1, hasRate ? -1 : undefined);
       const stat = statParts.join('_') || null;
-      const type = parts[0]; // always first part: "buff" or "nerf" or "direct_hit" etc
-
-      // For non buff/nerf effects, keep original parsing
+      const type = parts[0];
       if (type !== 'buff' && type !== 'nerf') {
         return { type: fx.replace(/_\d+$/, ''), rate: hasRate ? rate : null, stat: null };
       }
-
       return { type, stat: stat || null, rate: hasRate ? rate : null };
     }
 
@@ -831,7 +869,6 @@
       return `<span class="fx-emoji" title="${label}">${display}</span>`;
     }
 
-    // Normalize skill to always have hits array
     function normalizeSkill(skill) {
       if (skill.hits) return skill;
       return {
@@ -842,11 +879,12 @@
 
     function renderSkill(rawSkill) {
       const skill = normalizeSkill(rawSkill);
-      const type = skill.type || 'skill1';
-      const isUlt    = type === 'ultra';
-      const isSpec   = type === 'special';
-      const isTimer  = type === 'timer';
-      const isTrap   = type === 'trap';
+      const slot = skill.type || 'skill1';
+      const attackType = skill.attack_type || null;
+      const isUlt  = slot === 'ultra';
+      const isSpec = slot === 'special';
+      const isTimer = attackType === 'timer';
+      const isTrap  = attackType === 'trap';
 
       let cardClass = 'skill-card';
       if (isUlt)   cardClass += ' ultra';
@@ -854,7 +892,10 @@
       if (isTimer) cardClass += ' timer';
       if (isTrap)  cardClass += ' trap';
 
-      // Icon: timer/trap get fixed icon, others use dominant effect
+      // Slot label badge
+      const slotLabel = SKILL_TYPE_LABEL[slot] || slot;
+
+      // Icon
       let icon;
       if (isTimer) icon = '⏱️';
       else if (isTrap) icon = '🪤';
@@ -864,7 +905,6 @@
         icon = EFFECT_EMOJI[fxType] || '❓';
       }
 
-      // Effects row — per hit with target tag and separator
       const effectsHTML = skill.hits.map((hit, i) => {
         const targetKey = (hit.target || '').toLowerCase();
         const targetHTML = targetKey
@@ -887,6 +927,7 @@
           <div class="skill-icon-box">${icon}</div>
           <div class="skill-info">
             <div class="skill-top">
+              <span class="skill-slot-label">${slotLabel}</span>
               <span class="skill-name">${skill.name}</span>
               ${timerHTML}
               ${unlockHTML}
@@ -907,6 +948,17 @@
       modalCombo.textContent = `${item.combo[0]} + ${item.combo[1]}`;
       modalTier.className = `card-tier tier-${normalizeTier(item.tier)}`;
       modalTier.textContent = item.tier;
+      const gameKey = (item.game || '').toLowerCase();
+      const gameTagEl = document.getElementById('modalGameTag');
+      if (gameTagEl) {
+        if (gameKey) {
+          gameTagEl.className = `game-tag game-${gameKey}`;
+          gameTagEl.textContent = GAME_LABEL[gameKey] || item.game;
+          gameTagEl.style.display = '';
+        } else {
+          gameTagEl.style.display = 'none';
+        }
+      }
 
       // Body
       let bodyHTML = '';
