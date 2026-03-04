@@ -1,4 +1,5 @@
 [
+  
   {
     "id": 1,
     "name": "Venocore",
@@ -8,6 +9,7 @@
     "lore": "",
     "skills": []
   },
+  
   {
     "id": 2,
     "name": "Infernium",
@@ -44,6 +46,7 @@
       }
     ]
   },
+  
   {
     "id": 3,
     "name": "Radfrost",
@@ -51,34 +54,52 @@
     "tier": "Ultra Rare",
     "image": "img/radfrost.jpg",
     "origin": "Tibet, mountainous and snowy regions.",
-    "lore": "The Radfrost is known for it's enigmatic presence in high-altitude regions, where it has been an object of myth and legend among local tribes. Combining the raw energy of Uranium with the elusive nature of The Yeti, Radfrost are both a source of fear and fascination, as their radioactive aura is said to influence the surrounding environment",
+    "lore": "The Radfrost is known for it's enigmatic presence in high-altitude regions, 
+            where it has been an object of myth and legend among local tribes. Combining 
+            the raw energy of Uranium with the elusive nature of The Yeti, Radfrost are 
+            both a source of fear and fascination, as their radioactive aura is said to 
+            influence the surrounding environment",
     "skills": [
-      {
-        "name": "Isotope Avalanche",
-        "type": "skill1",
-        "hits": [{ "effects": ["direct_hit"] }]
-      },
-      {
-        "name": "Thermal Mythos",
-        "type": "skill2",
-        "hits": [{ "effects": ["buff", "dot"] }]
-      },
-      {
-        "name": "Radiant Freeze",
-        "type": "special",
-        "hits": [
-          { "effects": ["nerf", "stun"] },
-          { "effects": ["buff"] }
-        ]
-      },
-      {
-        "name": "Atomic Blizzard Outbreak",
-        "type": "ultimate",
-        "hits": [
-          { "effects": ["aoe", "dot", "stun"] },
-          { "effects": ["aoe", "dot", "nerf"] }
-        ]
-      }
-    ]
-  }
+      {"name": "Isotope Avalanche", "type": "skill1", "effects": ["direct_hit"]},
+      {"name": "Thermal Mythos", "type": "skill2", "hits": [
+          { "target": "self", "effects": ["buff_atk_3"]},
+          { "target": "enemy", "effects": ["dot"]} 
+          ]},
+      {"name": "Radiant Freeze", "type": "special", "hits": [
+          { "target": "all_enemy", "effects": ["nerf_dodge_3", "stun"]},
+          { "target": "self", "effects": ["buff_def_1"]}
+          ]},
+      {"name": "Atomic Blizzard Outbreak", "type": "ultra", "hits": [
+          { "effects": ["nerf_dodge_3", "stun"]},
+          { "effects": ["buff_def_1"]}
+      ]}
+]}
+
+  {
+    "id": 3,
+    "name": "Radfrost",
+    "combo": ["Uranium", "Yeti"],
+    "tier": "Ultra Rare",
+    "image": "img/radfrost.jpg",
+    "origin": "Tibet, mountainous and snowy regions.",
+    "lore": "The Radfrost is known for it's enigmatic presence in high-altitude regions, 
+            where it has been an object of myth and legend among local tribes. Combining 
+            the raw energy of Uranium with the elusive nature of The Yeti, Radfrost are 
+            both a source of fear and fascination, as their radioactive aura is said to 
+            influence the surrounding environment",
+    "skills": [
+      {"name": "Isotope Avalanche", "type": "skill1", "effects": ["direct_hit"]},
+      {"name": "Thermal Mythos", "type": "skill2", "hits": [
+          { "target": "self", "effects": ["buff_atk_3"]},
+          { "target": "enemy", "effects": ["dot"]}
+          ]},
+      {"name": "Radiant Freeze", "type": "special", "hits": [
+          { "effects": ["nerf", "stun"]},
+          { "effects": ["buff"]}
+          ]},
+      {"name": "Atomic Blizzard Outbreak", "type": "ultra", "hits": [
+          { "effects": ["aoe", "dot", "stun"]},
+          { "effects": ["aoe", "dot", "nerf"]}
+      ]}
+  ]}
 ]
