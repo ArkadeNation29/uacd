@@ -610,44 +610,13 @@
 
   <script>
     // ===== DATA =====
-    let ANIMASH_DATA = [
-      {
-        id: 1, name: "Flamara", combo: ["Flarix", "Mara"], tier: "S", emoji: "🔥",
-        lore: "Flamara adalah hasil fusi langka antara Flarix dan Mara yang hanya bisa terjadi di kawasan gunung berapi aktif. Tubuhnya memancarkan panas konstan yang mampu melelehkan batu biasa dalam hitungan detik.\n\nDikenal sebagai salah satu predator puncak di ekosistemnya, Flamara jarang terlihat bersama sejenisnya. Ia lebih memilih berburu sendirian di malam hari ketika suhu lingkungan turun drastis.\n\nLegenda lokal menyebutnya sebagai 'nyala yang tak pernah padam' karena tidak ada catatan Flamara yang pernah dikalahkan di habitat aslinya.",
-        skills: [
-          { name: "Ember Strike", type: "skill1", hits: [{ effects: ["direct_hit"] }] },
-          { name: "Heat Aura", type: "skill2", hits: [{ effects: ["buff", "dot"] }] },
-          { name: "Twin Flame", type: "skill3", hits: [{ effects: ["direct_hit", "aoe"] }, { effects: ["dot", "nerf"] }] },
-          { name: "Inferno Nova", type: "ultimate", unlock_level: 25, hits: [{ effects: ["aoe", "dot", "stun"] }, { effects: ["aoe", "dot", "nerf"] }] }
-        ]
-      },
-      {
-        id: 2, name: "Aquhorn", combo: ["Aqua", "Thornix"], tier: "A", emoji: "💧",
-        lore: "Aquhorn terbentuk dari perpaduan unik antara elemen air dan duri tajam Thornix. Tanduk kristalnya mampu membelah arus air dan memantulkan cahaya menjadi senjata yang mematikan.\n\nSpesies ini dikenal memiliki kemampuan adaptasi luar biasa — bisa bertahan di lingkungan kering maupun bawah air dengan efisiensi yang sama.",
-        skills: [
-          { name: "Hydro Spike", type: "skill1", hits: [{ effects: ["direct_hit", "dot"] }] },
-          { name: "Thorn Barrier", type: "skill2", hits: [{ effects: ["reflect", "buff"] }] },
-          { name: "Aqua Burst", type: "skill3", hits: [{ effects: ["aoe", "direct_hit"] }, { effects: ["stun"] }] },
-          { name: "Torrent Lance", type: "ultimate", unlock_level: 20, hits: [{ effects: ["aoe", "direct_hit", "nerf"] }, { effects: ["dot", "stun"] }] }
-        ]
-      },
-      {
-        id: 3, name: "Terravolt", combo: ["Terran", "Voltix"], tier: "A", emoji: "⚡",
-        lore: "Terravolt adalah anomali alam — fusi antara tanah yang stabil dan petir yang tak terduga. Setiap langkahnya meninggalkan bekas gosong di tanah, dan badannya selalu mengeluarkan muatan listrik statis.\n\nPara peneliti mencatat bahwa Terravolt cenderung muncul sebelum badai besar, seolah-olah ia mampu merasakan perubahan tekanan udara jauh sebelum manusia.",
-        skills: [
-          { name: "Ground Shock", type: "skill1", hits: [{ effects: ["direct_hit", "stun"] }] },
-          { name: "Static Field", type: "skill2", hits: [{ effects: ["aoe", "nerf"] }] },
-          { name: "Volt Slam", type: "skill3", hits: [{ effects: ["direct_hit", "aoe"] }, { effects: ["stun", "dot"] }] },
-          { name: "Earthquake Surge", type: "ultimate", unlock_level: 22, hits: [{ effects: ["aoe", "direct_hit", "stun"] }, { effects: ["aoe", "nerf", "dot"] }] }
-        ]
-      }
-    ];
+    let ANIMASH_DATA = [];
 
     // Uncomment kalau sudah ada data.json:
-    // fetch('./data.json')
-    //   .then(r => r.json())
-    //   .then(data => { ANIMASH_DATA = data; })
-    //   .catch(console.error);
+    fetch('./data.json')
+       .then(r => r.json())
+       .then(data => { ANIMASH_DATA = data; })
+       .catch(console.error);
 
     // ===== EFFECT LABELS =====
     const EFFECT_LABELS = {
