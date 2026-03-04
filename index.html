@@ -479,7 +479,7 @@
       gap: 0.85rem;
     }
 
-    .skill-card.ultimate {
+    .skill-card.ultra {
       border-color: rgba(255,200,50,0.3);
       background: rgba(255,200,50,0.04);
     }
@@ -487,6 +487,16 @@
     .skill-card.special {
       border-color: rgba(124,106,255,0.3);
       background: rgba(124,106,255,0.04);
+    }
+
+    .skill-card.timer {
+      border-color: rgba(50,200,255,0.3);
+      background: rgba(50,200,255,0.04);
+    }
+
+    .skill-card.trap {
+      border-color: rgba(255,150,50,0.3);
+      background: rgba(255,150,50,0.04);
     }
 
     .skill-icon-box {
@@ -502,7 +512,7 @@
       flex-shrink: 0;
     }
 
-    .skill-card.ultimate .skill-icon-box {
+    .skill-card.ultra .skill-icon-box {
       border-color: rgba(255,200,50,0.4);
       background: rgba(255,200,50,0.08);
     }
@@ -510,6 +520,45 @@
     .skill-card.special .skill-icon-box {
       border-color: rgba(124,106,255,0.4);
       background: rgba(124,106,255,0.08);
+    }
+
+    .skill-card.timer .skill-icon-box {
+      border-color: rgba(50,200,255,0.4);
+      background: rgba(50,200,255,0.08);
+    }
+
+    .skill-card.trap .skill-icon-box {
+      border-color: rgba(255,150,50,0.4);
+      background: rgba(255,150,50,0.08);
+    }
+
+    /* Target tag */
+    .target-tag {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.55rem;
+      font-weight: 700;
+      padding: 0.15rem 0.45rem;
+      border-radius: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      flex-shrink: 0;
+    }
+    .target-self      { background: rgba(106,255,202,0.1);  color: var(--accent3); border: 1px solid rgba(106,255,202,0.25); }
+    .target-ally      { background: rgba(80,200,120,0.1);   color: #50c878;        border: 1px solid rgba(80,200,120,0.25); }
+    .target-allies    { background: rgba(80,200,120,0.12);  color: #50c878;        border: 1px solid rgba(80,200,120,0.3); }
+    .target-enemy     { background: rgba(255,106,155,0.1);  color: var(--accent2); border: 1px solid rgba(255,106,155,0.25); }
+    .target-enemies   { background: rgba(255,60,60,0.1);    color: #ff5c5c;        border: 1px solid rgba(255,60,60,0.25); }
+
+    /* Timer turn badge */
+    .timer-turns {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.55rem;
+      color: #32c8ff;
+      background: rgba(50,200,255,0.1);
+      border: 1px solid rgba(50,200,255,0.25);
+      padding: 0.15rem 0.45rem;
+      border-radius: 4px;
+      flex-shrink: 0;
     }
 
     .skill-info { flex: 1; min-width: 0; }
@@ -546,10 +595,17 @@
     .fx-emoji {
       font-size: 0.95rem;
       line-height: 1;
-      title: attr(data-label);
     }
 
-    /* Hit separator for skill3/ultimate */
+    .fx-stat {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.55rem;
+      vertical-align: middle;
+      opacity: 0.85;
+      margin-left: 1px;
+    }
+
+    /* Hit separator for skill3/ultra */
     .hit-sep {
       width: 1px;
       height: 14px;
@@ -631,23 +687,24 @@
 
     // ===== EFFECT LABELS =====
     const EFFECT_LABELS = {
-      direct_hit:  "⚔️ Direct Hit",
-      aoe:         "💥 AOE",
-      dot:         "🔥 DoT",
-      stun:        "💫 Stun",
-      nerf:        "⬇️ Nerf",
-      buff:        "⬆️ Buff",
-      untouchable: "🛡️ Untouchable",
-      reflect:     "🔄 Reflect",
-      heal:        "💚 Heal",
-      heal_ot:     "🌿 Heal OT",
+      direct_hit:  "Direct Hit",
+      aoe:         "AOE",
+      dot:         "DoT",
+      stun:        "Stun",
+      nerf:        "Nerf",
+      buff:        "Buff",
+      heal_ot:     "Heal OT",
+      reflect:     "Reflect",
+      untouchable: "Untouchable",
     };
 
     const SKILL_TYPE_LABEL = {
       skill1: "Skill 1",
       skill2: "Skill 2",
       special: "Special",
-      ultimate: "Ultimate",
+      ultra: "Ultra",
+      timer: "Timer",
+      trap: "Trap",
     };
 
     // ===== SEARCH =====
@@ -711,7 +768,7 @@
     });
 
     // ===== MODAL =====
-    const overlay   = document.getElementById('modalOverlay');
+    const overlay    = document.getElementById('modalOverlay');
     const modalThumb = document.getElementById('modalThumb');
     const modalName  = document.getElementById('modalName');
     const modalCombo = document.getElementById('modalCombo');
@@ -719,29 +776,107 @@
     const modalBody  = document.getElementById('modalBody');
     const modalClose = document.getElementById('modalClose');
 
-    // Dominant effect icon per skill (first hit, first effect)
     const EFFECT_EMOJI = {
-      direct_hit: '⚔️', aoe: '💥', dot: '🔥', stun: '💫',
-      nerf: '⬇️', buff: '⬆️', untouchable: '🛡️', reflect: '🔄',
-      heal: '💚', heal_ot: '🌿',
+      direct_hit:  '⚔️',
+      aoe:         '💥',
+      dot:         '🔥',
+      stun:        '💫',
+      nerf:        '⬇️',
+      buff:        '⬆️',
+      heal_ot:     '🌿',
+      reflect:     '🔄',
+      untouchable: '🛡️',
     };
 
-    function renderSkill(skill) {
-      const isUlt = skill.type === 'ultimate';
-      const isSk3 = skill.type === 'special';
-      const cardClass = isUlt ? 'skill-card ultimate' : isSk3 ? 'skill-card special' : 'skill-card';
+    // Rate superscripts for buff/nerf
+    const RATE_SUP = { 1: '¹', 2: '²', 3: '³' };
 
-      // Dominant icon = first effect of first hit
-      const dominantFx = skill.hits[0]?.effects[0] || 'direct_hit';
-      const icon = EFFECT_EMOJI[dominantFx] || '❓';
+    const TARGET_LABEL = {
+      self: 'self', ally: 'ally', allies: 'allies',
+      enemy: 'enemy', enemies: 'enemies',
+    };
 
-      // All effects across all hits, with separator between hits
+    const STAT_LABEL = {
+      atk: 'ATK', def: 'DEF', dodge: 'DODGE', accuracy: 'ACC'
+    };
+
+    // Parse effect string
+    // Supports: "nerf", "buff_2", "nerf_atk", "buff_def_2", "nerf_dodge_3"
+    function parseEffect(fx) {
+      const parts = fx.split('_');
+      const last = parts[parts.length - 1];
+      const rate = parseInt(last);
+      const hasRate = !isNaN(rate);
+
+      // Stat is any part that matches known stats
+      const statParts = parts.slice(1, hasRate ? -1 : undefined);
+      const stat = statParts.join('_') || null;
+      const type = parts[0]; // always first part: "buff" or "nerf" or "direct_hit" etc
+
+      // For non buff/nerf effects, keep original parsing
+      if (type !== 'buff' && type !== 'nerf') {
+        return { type: fx.replace(/_\d+$/, ''), rate: hasRate ? rate : null, stat: null };
+      }
+
+      return { type, stat: stat || null, rate: hasRate ? rate : null };
+    }
+
+    function renderEffectEmoji(fx) {
+      const { type, stat, rate } = parseEffect(fx);
+      const emoji = EFFECT_EMOJI[type] || '❓';
+      const statStr = stat && STAT_LABEL[stat] ? STAT_LABEL[stat] : (stat ? stat.toUpperCase() : '');
+      const sup = rate && RATE_SUP[rate] ? RATE_SUP[rate] : (rate ? String(rate) : '');
+      const label = `${EFFECT_LABELS[type] || type}${statStr ? ' '+statStr : ''}${rate ? ' x'+rate : ''}`;
+      const display = `${emoji}${statStr ? '<span class="fx-stat">'+statStr+'</span>' : ''}${sup}`;
+      return `<span class="fx-emoji" title="${label}">${display}</span>`;
+    }
+
+    // Normalize skill to always have hits array
+    function normalizeSkill(skill) {
+      if (skill.hits) return skill;
+      return {
+        ...skill,
+        hits: [{ target: skill.target || '', effects: skill.effects || [] }]
+      };
+    }
+
+    function renderSkill(rawSkill) {
+      const skill = normalizeSkill(rawSkill);
+      const type = skill.type || 'skill1';
+      const isUlt    = type === 'ultra';
+      const isSpec   = type === 'special';
+      const isTimer  = type === 'timer';
+      const isTrap   = type === 'trap';
+
+      let cardClass = 'skill-card';
+      if (isUlt)   cardClass += ' ultra';
+      if (isSpec)  cardClass += ' special';
+      if (isTimer) cardClass += ' timer';
+      if (isTrap)  cardClass += ' trap';
+
+      // Icon: timer/trap get fixed icon, others use dominant effect
+      let icon;
+      if (isTimer) icon = '⏱️';
+      else if (isTrap) icon = '🪤';
+      else {
+        const firstFx = skill.hits[0]?.effects[0] || 'direct_hit';
+        const { type: fxType } = parseEffect(firstFx);
+        icon = EFFECT_EMOJI[fxType] || '❓';
+      }
+
+      // Effects row — per hit with target tag and separator
       const effectsHTML = skill.hits.map((hit, i) => {
-        const emojis = hit.effects.map(fx =>
-          `<span class="fx-emoji" title="${EFFECT_LABELS[fx] || fx}">${EFFECT_EMOJI[fx] || '❓'}</span>`
-        ).join('');
-        return (i > 0 ? '<span class="hit-sep"></span>' : '') + emojis;
+        const targetKey = (hit.target || '').toLowerCase();
+        const targetHTML = targetKey
+          ? `<span class="target-tag target-${targetKey}">${TARGET_LABEL[targetKey] || targetKey}</span>`
+          : '';
+        const emojis = (hit.effects || []).map(renderEffectEmoji).join('');
+        return (i > 0 ? '<span class="hit-sep"></span>' : '') + targetHTML + emojis;
       }).join('');
+
+      const timerHTML = isTimer && skill.timer_turns
+        ? `<span class="timer-turns">⏱ ${skill.timer_turns}T</span>`
+        : '';
 
       const unlockHTML = skill.unlock_level
         ? `<span class="skill-unlock">lv.${skill.unlock_level}</span>`
@@ -753,6 +888,7 @@
           <div class="skill-info">
             <div class="skill-top">
               <span class="skill-name">${skill.name}</span>
+              ${timerHTML}
               ${unlockHTML}
             </div>
             <div class="skill-effects">${effectsHTML}</div>
