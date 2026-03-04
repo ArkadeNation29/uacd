@@ -273,6 +273,21 @@
     .tier-c { background: rgba(255,106,155,0.1); color: var(--accent2); border: 1px solid rgba(255,106,155,0.25); }
     .tier-d { background: rgba(122,122,154,0.1); color: var(--text-dim); border: 1px solid var(--border); }
 
+    /* Animash tiers */
+    .tier-common        { background: rgba(180,180,180,0.1); color: #b4b4b4; border: 1px solid rgba(180,180,180,0.25); }
+    .tier-unique        { background: rgba(80,200,120,0.1);  color: #50c878; border: 1px solid rgba(80,200,120,0.25); }
+    .tier-rare          { background: rgba(50,150,255,0.1);  color: #3296ff; border: 1px solid rgba(50,150,255,0.25); }
+    .tier-ultra-rare    { background: rgba(124,106,255,0.15); color: var(--accent); border: 1px solid rgba(124,106,255,0.3); }
+    .tier-legendary     { background: rgba(255,200,50,0.15); color: #ffc832; border: 1px solid rgba(255,200,50,0.3); }
+    .tier-mythical      { background: rgba(255,100,50,0.12); color: #ff6432; border: 1px solid rgba(255,100,50,0.3); }
+    .tier-divine        { background: rgba(255,150,255,0.12); color: #ff96ff; border: 1px solid rgba(255,150,255,0.3); }
+    .tier-supreme       { background: rgba(255,50,50,0.12);  color: #ff3232; border: 1px solid rgba(255,50,50,0.3); }
+    .tier-alpha-supreme { background: rgba(255,80,150,0.12); color: #ff5096; border: 1px solid rgba(255,80,150,0.3); }
+    .tier-gamma-supreme { background: rgba(150,50,255,0.15); color: #9632ff; border: 1px solid rgba(150,50,255,0.3); }
+    .tier-zeta-supreme  { background: rgba(50,200,255,0.12); color: #32c8ff; border: 1px solid rgba(50,200,255,0.3); }
+    .tier-theta-supreme { background: rgba(255,200,100,0.15); color: #ffc864; border: 1px solid rgba(255,200,100,0.3); }
+    .tier-kappa-supreme { background: linear-gradient(135deg, rgba(255,200,50,0.15), rgba(150,50,255,0.15)); color: #fff; border: 1px solid rgba(255,255,255,0.3); }
+
     .no-results {
       text-align: center;
       padding: 3rem 1rem;
@@ -432,6 +447,17 @@
 
     .modal-section-label:first-child { margin-top: 0; }
 
+    .origin-text {
+      font-size: 0.82rem;
+      color: var(--accent3);
+      line-height: 1.6;
+      font-style: italic;
+      padding: 0.6rem 0.8rem;
+      border-left: 2px solid rgba(106,255,202,0.3);
+      background: rgba(106,255,202,0.04);
+      border-radius: 0 6px 6px 0;
+    }
+
     .lore-text {
       font-size: 0.88rem;
       line-height: 1.8;
@@ -441,13 +467,16 @@
     .lore-text p + p { margin-top: 0.8rem; }
 
     /* Skills */
-    .skills-list { display: flex; flex-direction: column; gap: 0.75rem; }
+    .skills-list { display: flex; flex-direction: column; gap: 0.6rem; }
 
     .skill-card {
       background: var(--card-bg);
       border: 1px solid var(--border);
       border-radius: 10px;
-      padding: 0.9rem 1rem;
+      padding: 0.85rem 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
     }
 
     .skill-card.ultimate {
@@ -455,96 +484,79 @@
       background: rgba(255,200,50,0.04);
     }
 
-    .skill-card.skill3 {
+    .skill-card.special {
       border-color: rgba(124,106,255,0.3);
       background: rgba(124,106,255,0.04);
     }
 
-    .skill-header {
+    .skill-icon-box {
+      width: 44px;
+      height: 44px;
+      border-radius: 10px;
+      background: var(--surface2);
+      border: 1px solid var(--border);
       display: flex;
       align-items: center;
-      gap: 0.6rem;
-      margin-bottom: 0.6rem;
+      justify-content: center;
+      font-size: 1.4rem;
+      flex-shrink: 0;
     }
 
-    .skill-label {
-      font-family: 'Space Mono', monospace;
-      font-size: 0.58rem;
-      font-weight: 700;
-      letter-spacing: 0.1em;
-      padding: 0.18rem 0.5rem;
-      border-radius: 5px;
-      text-transform: uppercase;
+    .skill-card.ultimate .skill-icon-box {
+      border-color: rgba(255,200,50,0.4);
+      background: rgba(255,200,50,0.08);
     }
 
-    .label-skill1, .label-skill2 {
-      background: rgba(106,255,202,0.08);
-      color: var(--accent3);
-      border: 1px solid rgba(106,255,202,0.2);
+    .skill-card.special .skill-icon-box {
+      border-color: rgba(124,106,255,0.4);
+      background: rgba(124,106,255,0.08);
     }
 
-    .label-skill3 {
-      background: rgba(124,106,255,0.12);
-      color: var(--accent);
-      border: 1px solid rgba(124,106,255,0.3);
-    }
+    .skill-info { flex: 1; min-width: 0; }
 
-    .label-ultimate {
-      background: rgba(255,200,50,0.12);
-      color: #ffc832;
-      border: 1px solid rgba(255,200,50,0.3);
+    .skill-top {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 0.35rem;
     }
 
     .skill-name {
+      font-family: 'Syne', sans-serif;
       font-weight: 700;
-      font-size: 0.9rem;
-      flex: 1;
+      font-size: 0.92rem;
+      color: var(--text);
     }
 
     .skill-unlock {
       font-family: 'Space Mono', monospace;
-      font-size: 0.6rem;
+      font-size: 0.58rem;
       color: #ffc832;
       opacity: 0.8;
+      margin-left: auto;
+      flex-shrink: 0;
     }
 
-    .skill-hits { display: flex; flex-direction: column; gap: 0.4rem; }
-
-    .skill-hit {
+    .skill-effects {
       display: flex;
-      align-items: center;
-      gap: 0.5rem;
+      gap: 0.3rem;
       flex-wrap: wrap;
     }
 
-    .hit-label {
-      font-family: 'Space Mono', monospace;
-      font-size: 0.58rem;
-      color: var(--text-dim);
-      min-width: 40px;
+    .fx-emoji {
+      font-size: 0.95rem;
+      line-height: 1;
+      title: attr(data-label);
     }
 
-    .effect-tags { display: flex; gap: 0.3rem; flex-wrap: wrap; }
-
-    .effect-tag {
-      font-family: 'Space Mono', monospace;
-      font-size: 0.58rem;
-      padding: 0.15rem 0.45rem;
-      border-radius: 4px;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
+    /* Hit separator for skill3/ultimate */
+    .hit-sep {
+      width: 1px;
+      height: 14px;
+      background: var(--border);
+      margin: 0 0.1rem;
+      align-self: center;
     }
-
-    .fx-direct_hit   { background: rgba(255,106,155,0.12); color: var(--accent2); border: 1px solid rgba(255,106,155,0.25); }
-    .fx-aoe          { background: rgba(255,150,50,0.12);  color: #ff9632;        border: 1px solid rgba(255,150,50,0.25); }
-    .fx-dot          { background: rgba(180,80,255,0.12);  color: #b450ff;        border: 1px solid rgba(180,80,255,0.25); }
-    .fx-stun         { background: rgba(255,200,50,0.12);  color: #ffc832;        border: 1px solid rgba(255,200,50,0.3); }
-    .fx-nerf         { background: rgba(255,60,60,0.1);    color: #ff5c5c;        border: 1px solid rgba(255,60,60,0.25); }
-    .fx-buff         { background: rgba(106,255,202,0.1);  color: var(--accent3); border: 1px solid rgba(106,255,202,0.25); }
-    .fx-untouchable  { background: rgba(200,200,255,0.1);  color: #c8c8ff;        border: 1px solid rgba(200,200,255,0.2); }
-    .fx-reflect      { background: rgba(124,106,255,0.12); color: var(--accent);  border: 1px solid rgba(124,106,255,0.3); }
-    .fx-heal         { background: rgba(80,255,120,0.1);   color: #50ff78;        border: 1px solid rgba(80,255,120,0.25); }
-    .fx-heal_ot      { background: rgba(50,200,100,0.1);   color: #32c864;        border: 1px solid rgba(50,200,100,0.25); }
   </style>
 </head>
 <body>
@@ -612,30 +624,29 @@
     // ===== DATA =====
     let ANIMASH_DATA = [];
 
-    // Uncomment kalau sudah ada data.json:
     fetch('./data.json')
-       .then(r => r.json())
-       .then(data => { ANIMASH_DATA = data; })
-       .catch(console.error);
+      .then(r => r.json())
+      .then(data => { ANIMASH_DATA = data; })
+      .catch(console.error);
 
     // ===== EFFECT LABELS =====
     const EFFECT_LABELS = {
-      direct_hit:  "Direct Hit",
-      aoe:         "AOE",
-      dot:         "DoT",
-      stun:        "Stun",
-      nerf:        "Nerf",
-      buff:        "Buff",
-      untouchable: "Untouchable",
-      reflect:     "Reflect",
-      heal:        "Heal",
-      heal_ot:     "Heal OT",
+      direct_hit:  "⚔️ Direct Hit",
+      aoe:         "💥 AOE",
+      dot:         "🔥 DoT",
+      stun:        "💫 Stun",
+      nerf:        "⬇️ Nerf",
+      buff:        "⬆️ Buff",
+      untouchable: "🛡️ Untouchable",
+      reflect:     "🔄 Reflect",
+      heal:        "💚 Heal",
+      heal_ot:     "🌿 Heal OT",
     };
 
     const SKILL_TYPE_LABEL = {
       skill1: "Skill 1",
       skill2: "Skill 2",
-      skill3: "Skill 3",
+      special: "Special",
       ultimate: "Ultimate",
     };
 
@@ -645,6 +656,10 @@
     const grid = document.getElementById('resultsGrid');
     const countEl = document.getElementById('resultsCount');
     const scrollHint = document.getElementById('scrollHint');
+
+    function normalizeTier(tier) {
+      return tier.toLowerCase().replace(/\s+/g, '-');
+    }
 
     function renderCard(item, delay) {
       const div = document.createElement('div');
@@ -658,7 +673,7 @@
         <div class="card-info">
           <div class="card-name">${item.name}</div>
           <div class="card-combo">${item.combo[0]} + ${item.combo[1]}</div>
-          <span class="card-tier tier-${item.tier.toLowerCase()}">Tier ${item.tier}</span>
+          <span class="card-tier tier-${normalizeTier(item.tier)}">${item.tier}</span>
         </div>
       `;
       div.addEventListener('click', () => openModal(item));
@@ -704,38 +719,44 @@
     const modalBody  = document.getElementById('modalBody');
     const modalClose = document.getElementById('modalClose');
 
-    function renderEffectTag(fx) {
-      return `<span class="effect-tag fx-${fx}">${EFFECT_LABELS[fx] || fx}</span>`;
-    }
+    // Dominant effect icon per skill (first hit, first effect)
+    const EFFECT_EMOJI = {
+      direct_hit: '⚔️', aoe: '💥', dot: '🔥', stun: '💫',
+      nerf: '⬇️', buff: '⬆️', untouchable: '🛡️', reflect: '🔄',
+      heal: '💚', heal_ot: '🌿',
+    };
 
     function renderSkill(skill) {
       const isUlt = skill.type === 'ultimate';
-      const isSk3 = skill.type === 'skill3';
-      const typeLabel = SKILL_TYPE_LABEL[skill.type] || skill.type;
-      const labelClass = `label-${skill.type}`;
-      const cardClass = isUlt ? 'skill-card ultimate' : isSk3 ? 'skill-card skill3' : 'skill-card';
+      const isSk3 = skill.type === 'special';
+      const cardClass = isUlt ? 'skill-card ultimate' : isSk3 ? 'skill-card special' : 'skill-card';
 
-      const hitsHTML = skill.hits.map((hit, i) => {
-        const showHitLabel = skill.hits.length > 1;
-        return `
-          <div class="skill-hit">
-            ${showHitLabel ? `<span class="hit-label">Hit ${i + 1}</span>` : ''}
-            <div class="effect-tags">${hit.effects.map(renderEffectTag).join('')}</div>
-          </div>`;
+      // Dominant icon = first effect of first hit
+      const dominantFx = skill.hits[0]?.effects[0] || 'direct_hit';
+      const icon = EFFECT_EMOJI[dominantFx] || '❓';
+
+      // All effects across all hits, with separator between hits
+      const effectsHTML = skill.hits.map((hit, i) => {
+        const emojis = hit.effects.map(fx =>
+          `<span class="fx-emoji" title="${EFFECT_LABELS[fx] || fx}">${EFFECT_EMOJI[fx] || '❓'}</span>`
+        ).join('');
+        return (i > 0 ? '<span class="hit-sep"></span>' : '') + emojis;
       }).join('');
 
       const unlockHTML = skill.unlock_level
-        ? `<span class="skill-unlock">unlock lv.${skill.unlock_level}</span>`
+        ? `<span class="skill-unlock">lv.${skill.unlock_level}</span>`
         : '';
 
       return `
         <div class="${cardClass}">
-          <div class="skill-header">
-            <span class="skill-label ${labelClass}">${typeLabel}</span>
-            <span class="skill-name">${skill.name}</span>
-            ${unlockHTML}
+          <div class="skill-icon-box">${icon}</div>
+          <div class="skill-info">
+            <div class="skill-top">
+              <span class="skill-name">${skill.name}</span>
+              ${unlockHTML}
+            </div>
+            <div class="skill-effects">${effectsHTML}</div>
           </div>
-          <div class="skill-hits">${hitsHTML}</div>
         </div>`;
     }
 
@@ -748,11 +769,18 @@
       // Header info
       modalName.textContent = item.name;
       modalCombo.textContent = `${item.combo[0]} + ${item.combo[1]}`;
-      modalTier.className = `card-tier tier-${item.tier.toLowerCase()}`;
-      modalTier.textContent = `Tier ${item.tier}`;
+      modalTier.className = `card-tier tier-${normalizeTier(item.tier)}`;
+      modalTier.textContent = item.tier;
 
       // Body
       let bodyHTML = '';
+
+      // Origin
+      if (item.origin) {
+        bodyHTML += `
+          <div class="modal-section-label">// origin</div>
+          <div class="origin-text">${item.origin}</div>`;
+      }
 
       // Lore
       if (item.lore) {
