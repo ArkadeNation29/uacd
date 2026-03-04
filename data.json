@@ -66,12 +66,12 @@
           { "target": "enemy", "effects": ["dot"]} 
           ]},
       {"name": "Radiant Freeze", "type": "special", "hits": [
-          { "target": "all_enemy", "effects": ["nerf_dodge_3", "stun"]},
+          { "target": "enemies", "effects": ["nerf_dodge_3", "stun"]},
           { "target": "self", "effects": ["buff_def_1"]}
           ]},
       {"name": "Atomic Blizzard Outbreak", "type": "ultra", "hits": [
-          { "effects": ["nerf_dodge_3", "stun"]},
-          { "effects": ["buff_def_1"]}
+          { "target": "", "effects": ["nerf_dodge_3", "stun"]},
+          { "target": "", "effects": ["buff_def_1"]}
       ]}
 ]}
 
