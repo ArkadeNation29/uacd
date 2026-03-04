@@ -5,5 +5,24 @@
     "combo":["Uranium","Cobra"],
     "tier":"Divine",
     "image":"img/venocore.jpg"
+    "lore":""
+    "skills":""
+  }
+  {
+    "id":"2",
+    "name":"Infernium",
+    "combo":["Uranium","Lava"],
+    "tier":"Common",
+    "image":"img/infernium.jpg"
+    "lore":"Infernium forms deep beneath the
+earth's crust, where volcanic
+activity meets rich uranium
+deposits, creating a rare and
+potent hybrid. Due to its unique
+composition, Infernium emits a
+low level of radiation combined
+with intense heat, making it a
+source of both energy and danger"
+    "skills":""
   }
 ]
