@@ -1,42 +1,84 @@
 [
   {
-    "id":"1",
-    "name":"Venocore",
-    "combo":["Uranium","Cobra"],
-    "tier":"Divine",
-    "image":"img/venocore.jpg",
-    "lore":"",
-    "skills":""
-  }
+    "id": 1,
+    "name": "Venocore",
+    "combo": ["Uranium", "Cobra"],
+    "tier": "Divine",
+    "image": "img/venocore.jpg",
+    "lore": "",
+    "skills": []
+  },
   {
-    "id":"2",
-    "name":"Infernium",
-    "combo":["Uranium","Lava"],
-    "tier":"Common",
-    "image":"img/infernium.jpg",
-    "lore":"Infernium forms deep beneath the
-earth's crust, where volcanic
-activity meets rich uranium
-deposits, creating a rare and
-potent hybrid. Due to its unique
-composition, Infernium emits a
-low level of radiation combined
-with intense heat, making it a
-source of both energy and danger",
+    "id": 2,
+    "name": "Infernium",
+    "combo": ["Uranium", "Lava"],
+    "tier": "Common",
+    "image": "img/infernium.jpg",
+    "lore": "Infernium forms deep beneath the earth's crust, where volcanic activity meets rich uranium deposits, creating a rare and potent hybrid.\n\nDue to its unique composition, Infernium emits a low level of radiation combined with intense heat, making it a source of both energy and danger.",
     "skills": [
-            { "name": "Ember Strike", 
-              "type": "skill1", 
-              "hits": [{ effects: ["direct_hit"] }] },
-            { "name": "Heat Aura", 
-              "type": "skill2", 
-              "hits": [{ effects: ["buff", "dot"] }] },
-            { "name": "Twin Flame", 
-              "type": "skill3", 
-              "hits": [{ effects: ["direct_hit", "aoe"] }, { effects: ["dot", "nerf"] }] },
-            { "name": "Inferno Nova", 
-              "type": "ultimate", 
-              "unlock_level": 25, 
-              "hits": [{ effects: ["aoe", "dot", "stun"] }, { effects: ["aoe", "dot", "nerf"] }] }
-            ]
+      {
+        "name": "Ember Strike",
+        "type": "skill1",
+        "hits": [{ "effects": ["direct_hit"] }]
+      },
+      {
+        "name": "Heat Aura",
+        "type": "skill2",
+        "hits": [{ "effects": ["buff", "dot"] }]
+      },
+      {
+        "name": "Twin Flame",
+        "type": "special",
+        "hits": [
+          { "effects": ["direct_hit", "aoe"] },
+          { "effects": ["dot", "nerf"] }
+        ]
+      },
+      {
+        "name": "Inferno Nova",
+        "type": "ultimate",
+        "hits": [
+          { "effects": ["aoe", "dot", "stun"] },
+          { "effects": ["aoe", "dot", "nerf"] }
+        ]
+      }
+    ]
+  },
+  {
+    "id": 3,
+    "name": "Radfrost",
+    "combo": ["Uranium", "Yeti"],
+    "tier": "Ultra Rare",
+    "image": "img/radfrost.jpg",
+    "origin": "Tibet, mountainous and snowy regions.",
+    "lore": "The Radfrost is known for it's enigmatic presence in high-altitude regions, where it has been an object of myth and legend among local tribes. Combining the raw energy of Uranium with the elusive nature of The Yeti, Radfrost are both a source of fear and fascination, as their radioactive aura is said to influence the surrounding environment",
+    "skills": [
+      {
+        "name": "Isotope Avalanche",
+        "type": "skill1",
+        "hits": [{ "effects": ["direct_hit"] }]
+      },
+      {
+        "name": "Thermal Mythos",
+        "type": "skill2",
+        "hits": [{ "effects": ["buff", "dot"] }]
+      },
+      {
+        "name": "Radiant Freeze",
+        "type": "special",
+        "hits": [
+          { "effects": ["nerf", "stun"] },
+          { "effects": ["buff"] }
+        ]
+      },
+      {
+        "name": "Atomic Blizzard Outbreak",
+        "type": "ultimate",
+        "hits": [
+          { "effects": ["aoe", "dot", "stun"] },
+          { "effects": ["aoe", "dot", "nerf"] }
+        ]
+      }
+    ]
   }
 ]
