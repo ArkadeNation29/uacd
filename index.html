@@ -1,1002 +1,318 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Animash / Mashy Pet DB</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;800&display=swap" rel="stylesheet">
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    :root {
-      --bg: #0a0a0f;
-      --surface: #12121a;
-      --surface2: #1a1a26;
-      --border: #2a2a3d;
-      --accent: #7c6aff;
-      --accent2: #ff6a9b;
-      --accent3: #6affca;
-      --text: #e8e8f0;
-      --text-dim: #7a7a9a;
-      --card-bg: #0f0f1a;
-    }
-
-    body {
-      background: var(--bg);
-      color: var(--text);
-      font-family: 'Syne', sans-serif;
-      min-height: 100vh;
-      overflow-x: hidden;
-    }
-
-    .orb {
-      position: fixed;
-      border-radius: 50%;
-      filter: blur(80px);
-      pointer-events: none;
-      z-index: 0;
-    }
-    .orb-1 { width: 400px; height: 400px; background: rgba(124,106,255,0.12); top: -100px; left: -100px; }
-    .orb-2 { width: 300px; height: 300px; background: rgba(255,106,155,0.08); bottom: 100px; right: -50px; }
-    .orb-3 { width: 250px; height: 250px; background: rgba(106,255,202,0.06); top: 40%; left: 60%; }
-
-    .hero {
-      position: relative;
-      z-index: 1;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 2rem;
-      text-align: center;
-    }
-
-    .hero-tag {
-      font-family: 'Space Mono', monospace;
-      font-size: 0.7rem;
-      color: var(--accent3);
-      letter-spacing: 0.25em;
-      text-transform: uppercase;
-      border: 1px solid rgba(106,255,202,0.25);
-      padding: 0.3rem 0.9rem;
-      border-radius: 999px;
-      margin-bottom: 2rem;
-      opacity: 0;
-      animation: fadeUp 0.6s ease forwards 0.2s;
-    }
-
-    .hero-title {
-      font-size: clamp(3rem, 10vw, 7rem);
-      font-weight: 800;
-      line-height: 0.95;
-      letter-spacing: -0.03em;
-      margin-bottom: 1.2rem;
-      opacity: 0;
-      animation: fadeUp 0.6s ease forwards 0.4s;
-    }
-
-    .hero-title span.hl {
-      background: linear-gradient(135deg, var(--accent), var(--accent2));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-
-    .hero-sub {
-      font-size: 1rem;
-      color: var(--text-dim);
-      max-width: 400px;
-      line-height: 1.7;
-      margin-bottom: 3rem;
-      opacity: 0;
-      animation: fadeUp 0.6s ease forwards 0.6s;
-    }
-
-    .search-wrap {
-      width: 100%;
-      max-width: 560px;
-      opacity: 0;
-      animation: fadeUp 0.6s ease forwards 0.8s;
-    }
-
-    .search-box {
-      position: relative;
-      display: flex;
-      align-items: center;
-    }
-
-    .search-icon {
-      position: absolute;
-      left: 1.2rem;
-      color: var(--text-dim);
-      font-size: 1.1rem;
-      pointer-events: none;
-    }
-
-    .search-input {
-      width: 100%;
-      background: var(--surface);
-      border: 1.5px solid var(--border);
-      border-radius: 14px;
-      padding: 1rem 1.2rem 1rem 3.2rem;
-      font-size: 1rem;
-      font-family: 'Syne', sans-serif;
-      color: var(--text);
-      outline: none;
-      transition: border-color 0.2s, box-shadow 0.2s;
-    }
-
-    .search-input::placeholder { color: var(--text-dim); }
-
-    .search-input:focus {
-      border-color: var(--accent);
-      box-shadow: 0 0 0 3px rgba(124,106,255,0.15);
-    }
-
-    .search-hint {
-      font-family: 'Space Mono', monospace;
-      font-size: 0.68rem;
-      color: var(--text-dim);
-      margin-top: 0.75rem;
-      text-align: left;
-      padding-left: 0.3rem;
-    }
-
-    .scroll-hint {
-      position: absolute;
-      bottom: 2.5rem;
-      left: 50%;
-      transform: translateX(-50%);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 0.4rem;
-      color: var(--text-dim);
-      font-family: 'Space Mono', monospace;
-      font-size: 0.6rem;
-      letter-spacing: 0.15em;
-      opacity: 0;
-      animation: fadeUp 0.6s ease forwards 1.2s;
-    }
-
-    .scroll-arrow {
-      width: 1px;
-      height: 32px;
-      background: linear-gradient(to bottom, var(--accent), transparent);
-      animation: scrollPulse 1.8s ease infinite;
-    }
-
-    .results-section {
-      position: relative;
-      z-index: 1;
-      max-width: 900px;
-      margin: 0 auto;
-      padding: 0 1.5rem 5rem;
-      display: none;
-    }
-
-    .results-section.visible { display: block; }
-
-    .results-header {
-      font-family: 'Space Mono', monospace;
-      font-size: 0.72rem;
-      color: var(--text-dim);
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      margin-bottom: 1.5rem;
-      padding-bottom: 0.75rem;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .results-header span { color: var(--accent3); }
-
-    .results-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-      gap: 1rem;
-    }
-
-    .card {
-      background: var(--card-bg);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 1.2rem;
-      display: flex;
-      gap: 1rem;
-      align-items: flex-start;
-      cursor: pointer;
-      transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
-      animation: fadeUp 0.35s ease forwards;
-      opacity: 0;
-    }
-
-    .card:hover {
-      border-color: var(--accent);
-      transform: translateY(-2px);
-      box-shadow: 0 8px 30px rgba(124,106,255,0.12);
-    }
-
-    .card-thumb {
-      width: 56px;
-      height: 56px;
-      border-radius: 8px;
-      background: var(--surface2);
-      flex-shrink: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.8rem;
-      overflow: hidden;
-    }
-
-    .card-thumb img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      image-rendering: pixelated;
-    }
-
-    .card-info { flex: 1; min-width: 0; }
-
-    .card-name {
-      font-weight: 700;
-      font-size: 0.95rem;
-      margin-bottom: 0.2rem;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .card-combo {
-      font-family: 'Space Mono', monospace;
-      font-size: 0.65rem;
-      color: var(--text-dim);
-      margin-bottom: 0.5rem;
-    }
-
-    .card-tier {
-      display: inline-block;
-      font-family: 'Space Mono', monospace;
-      font-size: 0.6rem;
-      font-weight: 700;
-      letter-spacing: 0.08em;
-      padding: 0.2rem 0.55rem;
-      border-radius: 6px;
-      text-transform: uppercase;
-    }
-
-    .tier-s { background: rgba(255,200,50,0.15); color: #ffc832; border: 1px solid rgba(255,200,50,0.3); }
-    .tier-a { background: rgba(124,106,255,0.15); color: var(--accent); border: 1px solid rgba(124,106,255,0.3); }
-    .tier-b { background: rgba(106,255,202,0.1); color: var(--accent3); border: 1px solid rgba(106,255,202,0.25); }
-    .tier-c { background: rgba(255,106,155,0.1); color: var(--accent2); border: 1px solid rgba(255,106,155,0.25); }
-    .tier-d { background: rgba(122,122,154,0.1); color: var(--text-dim); border: 1px solid var(--border); }
-
-    .card-badges {
-      display: flex;
-      gap: 0.35rem;
-      flex-wrap: wrap;
-      margin-top: 0.5rem;
-    }
-
-    /* Game tags */
-    .game-tag {
-      display: inline-block;
-      font-family: 'Space Mono', monospace;
-      font-size: 0.55rem;
-      font-weight: 700;
-      letter-spacing: 0.06em;
-      padding: 0.2rem 0.5rem;
-      border-radius: 6px;
-      text-transform: uppercase;
-    }
-    .game-animash { background: rgba(124,106,255,0.12); color: var(--accent); border: 1px solid rgba(124,106,255,0.3); }
-    .game-mashy   { background: rgba(255,106,155,0.12); color: var(--accent2); border: 1px solid rgba(255,106,155,0.3); }
-    .game-both    { background: rgba(106,255,202,0.1);  color: var(--accent3); border: 1px solid rgba(106,255,202,0.25); }
-
-    /* Skill slot label */
-    .skill-slot-label {
-      font-family: 'Space Mono', monospace;
-      font-size: 0.55rem;
-      font-weight: 700;
-      color: var(--text-dim);
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      flex-shrink: 0;
-    }
-
-    /* Animash tiers */
-    .tier-common        { background: rgba(180,180,180,0.1); color: #b4b4b4; border: 1px solid rgba(180,180,180,0.25); }
-    .tier-unique        { background: rgba(80,200,120,0.1);  color: #50c878; border: 1px solid rgba(80,200,120,0.25); }
-    .tier-rare          { background: rgba(50,150,255,0.1);  color: #3296ff; border: 1px solid rgba(50,150,255,0.25); }
-    .tier-ultra-rare    { background: rgba(124,106,255,0.15); color: var(--accent); border: 1px solid rgba(124,106,255,0.3); }
-    .tier-legendary     { background: rgba(255,200,50,0.15); color: #ffc832; border: 1px solid rgba(255,200,50,0.3); }
-    .tier-mythical      { background: rgba(255,100,50,0.12); color: #ff6432; border: 1px solid rgba(255,100,50,0.3); }
-    .tier-divine        { background: rgba(255,150,255,0.12); color: #ff96ff; border: 1px solid rgba(255,150,255,0.3); }
-    .tier-supreme       { background: rgba(255,50,50,0.12);  color: #ff3232; border: 1px solid rgba(255,50,50,0.3); }
-    .tier-alpha-supreme { background: rgba(255,80,150,0.12); color: #ff5096; border: 1px solid rgba(255,80,150,0.3); }
-    .tier-gamma-supreme { background: rgba(150,50,255,0.15); color: #9632ff; border: 1px solid rgba(150,50,255,0.3); }
-    .tier-zeta-supreme  { background: rgba(50,200,255,0.12); color: #32c8ff; border: 1px solid rgba(50,200,255,0.3); }
-    .tier-theta-supreme { background: rgba(255,200,100,0.15); color: #ffc864; border: 1px solid rgba(255,200,100,0.3); }
-    .tier-kappa-supreme { background: linear-gradient(135deg, rgba(255,200,50,0.15), rgba(150,50,255,0.15)); color: #fff; border: 1px solid rgba(255,255,255,0.3); }
-
-    .no-results {
-      text-align: center;
-      padding: 3rem 1rem;
-      color: var(--text-dim);
-      font-family: 'Space Mono', monospace;
-      font-size: 0.8rem;
-      grid-column: 1 / -1;
-    }
-
-    .no-results .icon { font-size: 2.5rem; margin-bottom: 1rem; }
-
-    .footer {
-      position: relative;
-      z-index: 1;
-      text-align: center;
-      padding: 2rem;
-      font-family: 'Space Mono', monospace;
-      font-size: 0.65rem;
-      color: var(--text-dim);
-      border-top: 1px solid var(--border);
-    }
-
-    .footer a { color: var(--accent); text-decoration: none; }
-
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(16px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    @keyframes scrollPulse {
-      0%, 100% { opacity: 0.4; }
-      50% { opacity: 1; }
-    }
-
-    /* ===== MODAL ===== */
-    .modal-overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.75);
-      backdrop-filter: blur(6px);
-      z-index: 100;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 1rem;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.25s ease;
-    }
-
-    .modal-overlay.open {
-      opacity: 1;
-      pointer-events: all;
-    }
-
-    .modal {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 18px;
-      width: 100%;
-      max-width: 640px;
-      max-height: 90vh;
-      overflow-y: auto;
-      transform: translateY(20px) scale(0.97);
-      transition: transform 0.25s ease;
-      scrollbar-width: thin;
-      scrollbar-color: var(--border) transparent;
-    }
-
-    .modal-overlay.open .modal {
-      transform: translateY(0) scale(1);
-    }
-
-    .modal-header {
-      display: flex;
-      gap: 1.2rem;
-      align-items: flex-start;
-      padding: 1.5rem 1.5rem 1rem;
-      border-bottom: 1px solid var(--border);
-      position: sticky;
-      top: 0;
-      background: var(--surface);
-      z-index: 1;
-    }
-
-    .modal-thumb {
-      width: 72px;
-      height: 72px;
-      border-radius: 12px;
-      background: var(--surface2);
-      flex-shrink: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 2.4rem;
-      overflow: hidden;
-    }
-
-    .modal-thumb img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      image-rendering: pixelated;
-    }
-
-    .modal-title-wrap { flex: 1; }
-
-    .modal-name {
-      font-size: 1.5rem;
-      font-weight: 800;
-      letter-spacing: -0.02em;
-      margin-bottom: 0.3rem;
-    }
-
-    .modal-meta {
-      display: flex;
-      gap: 0.5rem;
-      align-items: center;
-      flex-wrap: wrap;
-    }
-
-    .modal-combo {
-      font-family: 'Space Mono', monospace;
-      font-size: 0.65rem;
-      color: var(--text-dim);
-    }
-
-    .modal-close {
-      background: none;
-      border: 1px solid var(--border);
-      color: var(--text-dim);
-      width: 32px;
-      height: 32px;
-      border-radius: 8px;
-      cursor: pointer;
-      font-size: 1rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-      transition: border-color 0.15s, color 0.15s;
-    }
-
-    .modal-close:hover { border-color: var(--accent2); color: var(--accent2); }
-
-    .modal-body { padding: 1.2rem 1.5rem 1.5rem; }
-
-    .modal-section-label {
-      font-family: 'Space Mono', monospace;
-      font-size: 0.62rem;
-      color: var(--text-dim);
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      margin-bottom: 0.8rem;
-      margin-top: 1.5rem;
-    }
-
-    .modal-section-label:first-child { margin-top: 0; }
-
-    .origin-text {
-      font-size: 0.82rem;
-      color: var(--accent3);
-      line-height: 1.6;
-      font-style: italic;
-      padding: 0.6rem 0.8rem;
-      border-left: 2px solid rgba(106,255,202,0.3);
-      background: rgba(106,255,202,0.04);
-      border-radius: 0 6px 6px 0;
-    }
-
-    .lore-text {
-      font-size: 0.88rem;
-      line-height: 1.8;
-      color: #c0c0d8;
-    }
-
-    .lore-text p + p { margin-top: 0.8rem; }
-
-    /* Skills */
-    .skills-list { display: flex; flex-direction: column; gap: 0.6rem; }
-
-    .skill-card {
-      background: var(--card-bg);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 0.85rem 1rem;
-      display: flex;
-      align-items: center;
-      gap: 0.85rem;
-    }
-
-    .skill-card.ultra {
-      border-color: rgba(255,200,50,0.3);
-      background: rgba(255,200,50,0.04);
-    }
-
-    .skill-card.special {
-      border-color: rgba(124,106,255,0.3);
-      background: rgba(124,106,255,0.04);
-    }
-
-    .skill-card.timer {
-      border-color: rgba(50,200,255,0.3);
-      background: rgba(50,200,255,0.04);
-    }
-
-    .skill-card.trap {
-      border-color: rgba(255,150,50,0.3);
-      background: rgba(255,150,50,0.04);
-    }
-
-    .skill-icon-box {
-      width: 44px;
-      height: 44px;
-      border-radius: 10px;
-      background: var(--surface2);
-      border: 1px solid var(--border);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.4rem;
-      flex-shrink: 0;
-    }
-
-    .skill-card.ultra .skill-icon-box {
-      border-color: rgba(255,200,50,0.4);
-      background: rgba(255,200,50,0.08);
-    }
-
-    .skill-card.special .skill-icon-box {
-      border-color: rgba(124,106,255,0.4);
-      background: rgba(124,106,255,0.08);
-    }
-
-    .skill-card.timer .skill-icon-box {
-      border-color: rgba(50,200,255,0.4);
-      background: rgba(50,200,255,0.08);
-    }
-
-    .skill-card.trap .skill-icon-box {
-      border-color: rgba(255,150,50,0.4);
-      background: rgba(255,150,50,0.08);
-    }
-
-    /* Target tag */
-    .target-tag {
-      font-family: 'Space Mono', monospace;
-      font-size: 0.55rem;
-      font-weight: 700;
-      padding: 0.15rem 0.45rem;
-      border-radius: 4px;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      flex-shrink: 0;
-    }
-    .target-self      { background: rgba(106,255,202,0.1);  color: var(--accent3); border: 1px solid rgba(106,255,202,0.25); }
-    .target-ally      { background: rgba(80,200,120,0.1);   color: #50c878;        border: 1px solid rgba(80,200,120,0.25); }
-    .target-allies    { background: rgba(80,200,120,0.12);  color: #50c878;        border: 1px solid rgba(80,200,120,0.3); }
-    .target-enemy     { background: rgba(255,106,155,0.1);  color: var(--accent2); border: 1px solid rgba(255,106,155,0.25); }
-    .target-enemies   { background: rgba(255,60,60,0.1);    color: #ff5c5c;        border: 1px solid rgba(255,60,60,0.25); }
-
-    /* Timer turn badge */
-    .timer-turns {
-      font-family: 'Space Mono', monospace;
-      font-size: 0.55rem;
-      color: #32c8ff;
-      background: rgba(50,200,255,0.1);
-      border: 1px solid rgba(50,200,255,0.25);
-      padding: 0.15rem 0.45rem;
-      border-radius: 4px;
-      flex-shrink: 0;
-    }
-
-    .skill-info { flex: 1; min-width: 0; }
-
-    .skill-top {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      margin-bottom: 0.35rem;
-    }
-
-    .skill-name {
-      font-family: 'Syne', sans-serif;
-      font-weight: 700;
-      font-size: 0.92rem;
-      color: var(--text);
-    }
-
-    .skill-unlock {
-      font-family: 'Space Mono', monospace;
-      font-size: 0.58rem;
-      color: #ffc832;
-      opacity: 0.8;
-      margin-left: auto;
-      flex-shrink: 0;
-    }
-
-    .skill-effects {
-      display: flex;
-      gap: 0.3rem;
-      flex-wrap: wrap;
-    }
-
-    .fx-emoji {
-      font-size: 0.95rem;
-      line-height: 1;
-    }
-
-    .fx-stat {
-      font-family: 'Space Mono', monospace;
-      font-size: 0.55rem;
-      vertical-align: middle;
-      opacity: 0.85;
-      margin-left: 1px;
-    }
-
-    /* Hit separator for skill3/ultra */
-    .hit-sep {
-      width: 1px;
-      height: 14px;
-      background: var(--border);
-      margin: 0 0.1rem;
-      align-self: center;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="color-scheme" content="dark light">
+    <meta name="description" content="UACD - Ultimate Animash / Mashy Pet Combo Database. Find all combos, tiers, and skills.">
+    <meta name="theme-color" content="#0a0a0f" media="(prefers-color-scheme: dark)">
+    <meta name="theme-color" content="#f5f5f7" media="(prefers-color-scheme: light)">
+    <title>UACD - Ultimate Animash Combo Database</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="preload" href="assets/style.css" as="style">
+    <link rel="stylesheet" href="assets/style.css">
+<base target="_blank">
 </head>
 <body>
+    <a href="#main-content" class="skip-link">Skip to content</a>
 
-  <div class="orb orb-1"></div>
-  <div class="orb orb-2"></div>
-  <div class="orb orb-3"></div>
+    <!-- Decorative orbs -->
+    <div class="orb orb-1" aria-hidden="true"></div>
+    <div class="orb orb-2" aria-hidden="true"></div>
+    <div class="orb orb-3" aria-hidden="true"></div>
 
-  <section class="hero" id="hero">
-    <div class="hero-tag">Community Database</div>
-    <h1 class="hero-title">Ultimate<br><span class="hl">Animash / Mashy Pet DB</span></h1>
-    <p class="hero-sub">Temukan semua kombinasi combo, tier, dan data animash & mashy pet dalam satu tempat.</p>
+    <!-- Header -->
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="./" class="brand" aria-label="UACD Home">
+                <span class="brand-icon" aria-hidden="true">🎮</span>
+                <div class="brand-text">
+                    <h1>UACD</h1>
+                    <p class="brand-tagline">Animash / Mashy DB</p>
+                </div>
+            </a>
 
-    <div class="search-wrap">
-      <div class="search-box">
-        <span class="search-icon">⌕</span>
-        <input
-          class="search-input"
-          id="searchInput"
-          type="text"
-          placeholder="Cari animal, item, atau kombinasi..."
-          autocomplete="off"
-          spellcheck="false"
-        />
-      </div>
-      <p class="search-hint">// ketik nama animal atau item untuk mulai pencarian</p>
-    </div>
-
-    <div class="scroll-hint" id="scrollHint">
-      scroll
-      <div class="scroll-arrow"></div>
-    </div>
-  </section>
-
-  <section class="results-section" id="resultsSection">
-    <div class="results-header">
-      — <span id="resultsCount">0</span> hasil ditemukan
-    </div>
-    <div class="results-grid" id="resultsGrid"></div>
-  </section>
-
-  <!-- MODAL -->
-  <div class="modal-overlay" id="modalOverlay">
-    <div class="modal" id="modal">
-      <div class="modal-header">
-        <div class="modal-thumb" id="modalThumb"></div>
-        <div class="modal-title-wrap">
-          <div class="modal-name" id="modalName"></div>
-          <div class="modal-meta">
-            <span class="modal-combo" id="modalCombo"></span>
-            <span class="card-tier" id="modalTier"></span>
-            <span class="game-tag" id="modalGameTag" style="display:none"></span>
-          </div>
-        </div>
-        <button class="modal-close" id="modalClose">✕</button>
-      </div>
-      <div class="modal-body" id="modalBody"></div>
-    </div>
-  </div>
-
-  <footer class="footer">
-    animash / mashy pet db &middot; community data &middot; <a href="https://github.com" target="_blank">github</a>
-  </footer>
-
-  <script>
-    // ===== DATA =====
-    let ANIMASH_DATA = [];
-
-    fetch('./data.json')
-      .then(r => r.json())
-      .then(data => { ANIMASH_DATA = data; })
-      .catch(console.error);
-
-    // ===== EFFECT LABELS =====
-    const EFFECT_LABELS = {
-      direct_hit:  "Direct Hit",
-      aoe:         "AOE",
-      dot:         "DoT",
-      stun:        "Stun",
-      nerf:        "Nerf",
-      buff:        "Buff",
-      heal_ot:     "Heal OT",
-      reflect:     "Reflect",
-      untouchable: "Untouchable",
-    };
-
-    const SKILL_TYPE_LABEL = {
-      skill1: "Skill 1",
-      skill2: "Skill 2",
-      special: "Special",
-      ultra: "Ultra",
-    };
-
-    const GAME_LABEL = {
-      animash: 'Animash',
-      mashy: 'Mashy Pet',
-      both: 'Both',
-    };
-
-    // ===== SEARCH =====
-    const input = document.getElementById('searchInput');
-    const section = document.getElementById('resultsSection');
-    const grid = document.getElementById('resultsGrid');
-    const countEl = document.getElementById('resultsCount');
-    const scrollHint = document.getElementById('scrollHint');
-
-    function normalizeTier(tier) {
-      return tier.toLowerCase().replace(/\s+/g, '-');
-    }
-
-    function renderCard(item, delay) {
-      const div = document.createElement('div');
-      div.className = 'card';
-      div.style.animationDelay = delay + 'ms';
-      const thumbContent = item.image
-        ? `<img src="${item.image}" alt="${item.name}" />`
-        : (item.emoji || '?');
-      const gameKey = (item.game || '').toLowerCase();
-      const gameHTML = gameKey
-        ? `<span class="game-tag game-${gameKey}">${GAME_LABEL[gameKey] || item.game}</span>`
-        : '';
-      div.innerHTML = `
-        <div class="card-thumb">${thumbContent}</div>
-        <div class="card-info">
-          <div class="card-name">${item.name}</div>
-          <div class="card-combo">${item.combo[0]} + ${item.combo[1]}</div>
-          <div class="card-badges">
-            <span class="card-tier tier-${normalizeTier(item.tier)}">${item.tier}</span>
-            ${gameHTML}
-          </div>
-        </div>
-      `;
-      div.addEventListener('click', () => openModal(item));
-      return div;
-    }
-
-    function search(query) {
-      const q = query.trim().toLowerCase();
-      if (!q) {
-        section.classList.remove('visible');
-        scrollHint.style.display = '';
-        return;
-      }
-      scrollHint.style.display = 'none';
-      const results = ANIMASH_DATA.filter(item =>
-        item.name.toLowerCase().includes(q) ||
-        item.combo.some(c => c.toLowerCase().includes(q)) ||
-        item.tier.toLowerCase() === q ||
-        (item.game || '').toLowerCase().includes(q)
-      );
-      grid.innerHTML = '';
-      countEl.textContent = results.length;
-      section.classList.add('visible');
-      if (results.length === 0) {
-        grid.innerHTML = `<div class="no-results"><div class="icon">🔍</div>Tidak ada hasil untuk "<strong>${query}</strong>"</div>`;
-        return;
-      }
-      results.forEach((item, i) => grid.appendChild(renderCard(item, i * 50)));
-      setTimeout(() => section.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
-    }
-
-    let debounceTimer;
-    input.addEventListener('input', e => {
-      clearTimeout(debounceTimer);
-      debounceTimer = setTimeout(() => search(e.target.value), 200);
-    });
-
-    // ===== MODAL =====
-    const overlay    = document.getElementById('modalOverlay');
-    const modalThumb = document.getElementById('modalThumb');
-    const modalName  = document.getElementById('modalName');
-    const modalCombo = document.getElementById('modalCombo');
-    const modalTier  = document.getElementById('modalTier');
-    const modalBody  = document.getElementById('modalBody');
-    const modalClose = document.getElementById('modalClose');
-
-    const EFFECT_EMOJI = {
-      direct_hit:  '⚔️',
-      aoe:         '💥',
-      dot:         '🔥',
-      stun:        '💫',
-      nerf:        '⬇️',
-      buff:        '⬆️',
-      heal_ot:     '🌿',
-      reflect:     '🔄',
-      untouchable: '🛡️',
-    };
-
-    const RATE_SUP = { 1: '¹', 2: '²', 3: '³' };
-
-    const TARGET_LABEL = {
-      self: 'self', ally: 'ally', allies: 'allies',
-      enemy: 'enemy', enemies: 'enemies',
-    };
-
-    const STAT_LABEL = {
-      atk: 'ATK', def: 'DEF', dodge: 'DODGE', accuracy: 'ACC'
-    };
-
-    function parseEffect(fx) {
-      const parts = fx.split('_');
-      const last = parts[parts.length - 1];
-      const rate = parseInt(last);
-      const hasRate = !isNaN(rate);
-      const statParts = parts.slice(1, hasRate ? -1 : undefined);
-      const stat = statParts.join('_') || null;
-      const type = parts[0];
-      if (type !== 'buff' && type !== 'nerf') {
-        return { type: fx.replace(/_\d+$/, ''), rate: hasRate ? rate : null, stat: null };
-      }
-      return { type, stat: stat || null, rate: hasRate ? rate : null };
-    }
-
-    function renderEffectEmoji(fx) {
-      const { type, stat, rate } = parseEffect(fx);
-      const emoji = EFFECT_EMOJI[type] || '❓';
-      const statStr = stat && STAT_LABEL[stat] ? STAT_LABEL[stat] : (stat ? stat.toUpperCase() : '');
-      const sup = rate && RATE_SUP[rate] ? RATE_SUP[rate] : (rate ? String(rate) : '');
-      const label = `${EFFECT_LABELS[type] || type}${statStr ? ' '+statStr : ''}${rate ? ' x'+rate : ''}`;
-      const display = `${emoji}${statStr ? '<span class="fx-stat">'+statStr+'</span>' : ''}${sup}`;
-      return `<span class="fx-emoji" title="${label}">${display}</span>`;
-    }
-
-    function normalizeSkill(skill) {
-      if (skill.hits) return skill;
-      return {
-        ...skill,
-        hits: [{ target: skill.target || '', effects: skill.effects || [] }]
-      };
-    }
-
-    function renderSkill(rawSkill) {
-      const skill = normalizeSkill(rawSkill);
-      const slot = skill.type || 'skill1';
-      const attackType = skill.attack_type || null;
-      const isUlt  = slot === 'ultra';
-      const isSpec = slot === 'special';
-      const isTimer = attackType === 'timer';
-      const isTrap  = attackType === 'trap';
-
-      let cardClass = 'skill-card';
-      if (isUlt)   cardClass += ' ultra';
-      if (isSpec)  cardClass += ' special';
-      if (isTimer) cardClass += ' timer';
-      if (isTrap)  cardClass += ' trap';
-
-      // Slot label badge
-      const slotLabel = SKILL_TYPE_LABEL[slot] || slot;
-
-      // Icon
-      let icon;
-      if (isTimer) icon = '⏱️';
-      else if (isTrap) icon = '🪤';
-      else {
-        const firstFx = skill.hits[0]?.effects[0] || 'direct_hit';
-        const { type: fxType } = parseEffect(firstFx);
-        icon = EFFECT_EMOJI[fxType] || '❓';
-      }
-
-      const effectsHTML = skill.hits.map((hit, i) => {
-        const targetKey = (hit.target || '').toLowerCase();
-        const targetHTML = targetKey
-          ? `<span class="target-tag target-${targetKey}">${TARGET_LABEL[targetKey] || targetKey}</span>`
-          : '';
-        const emojis = (hit.effects || []).map(renderEffectEmoji).join('');
-        return (i > 0 ? '<span class="hit-sep"></span>' : '') + targetHTML + emojis;
-      }).join('');
-
-      const timerHTML = isTimer && skill.timer_turns
-        ? `<span class="timer-turns">⏱ ${skill.timer_turns}T</span>`
-        : '';
-
-      const unlockHTML = skill.unlock_level
-        ? `<span class="skill-unlock">lv.${skill.unlock_level}</span>`
-        : '';
-
-      return `
-        <div class="${cardClass}">
-          <div class="skill-icon-box">${icon}</div>
-          <div class="skill-info">
-            <div class="skill-top">
-              <span class="skill-slot-label">${slotLabel}</span>
-              <span class="skill-name">${skill.name}</span>
-              ${timerHTML}
-              ${unlockHTML}
+            <div class="header-search">
+                <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+                    <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                </svg>
+                <input type="search" id="searchInput" placeholder="Search combos, animals, items..." autocomplete="off" aria-label="Search combos">
             </div>
-            <div class="skill-effects">${effectsHTML}</div>
-          </div>
-        </div>`;
-    }
 
-    function openModal(item) {
-      // Thumb
-      modalThumb.innerHTML = item.image
-        ? `<img src="${item.image}" alt="${item.name}" />`
-        : (item.emoji || '?');
+            <div class="header-actions">
+                <button class="icon-btn" id="filterToggle" aria-label="Open filters" title="Filters">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/>
+                        <line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/>
+                        <line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/>
+                        <line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/>
+                    </svg>
+                </button>
+                <button class="icon-btn" id="moreMenuToggle" aria-label="More options" title="More">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                        <line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
 
-      // Header info
-      modalName.textContent = item.name;
-      modalCombo.textContent = `${item.combo[0]} + ${item.combo[1]}`;
-      modalTier.className = `card-tier tier-${normalizeTier(item.tier)}`;
-      modalTier.textContent = item.tier;
-      const gameKey = (item.game || '').toLowerCase();
-      const gameTagEl = document.getElementById('modalGameTag');
-      if (gameTagEl) {
-        if (gameKey) {
-          gameTagEl.className = `game-tag game-${gameKey}`;
-          gameTagEl.textContent = GAME_LABEL[gameKey] || item.game;
-          gameTagEl.style.display = '';
-        } else {
-          gameTagEl.style.display = 'none';
-        }
-      }
+        <!-- Filter Panel -->
+        <div class="filter-panel" id="filterPanel" hidden>
+            <div class="filter-panel-inner">
+                <div class="filter-row">
+                    <div class="filter-group">
+                        <label for="filterTier">Tier</label>
+                        <select id="filterTier" class="filter-select">
+                            <option value="all">All Tiers</option>
+                            <option value="s">S-Tier</option>
+                            <option value="a">A-Tier</option>
+                            <option value="b">B-Tier</option>
+                            <option value="c">C-Tier</option>
+                            <option value="d">D-Tier</option>
+                            <option value="common">Common</option>
+                            <option value="unique">Unique</option>
+                            <option value="rare">Rare</option>
+                            <option value="ultra-rare">Ultra Rare</option>
+                            <option value="legendary">Legendary</option>
+                            <option value="mythical">Mythical</option>
+                            <option value="divine">Divine</option>
+                            <option value="supreme">Supreme</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label for="filterGame">Game</label>
+                        <select id="filterGame" class="filter-select">
+                            <option value="all">All Games</option>
+                            <option value="animash">Animash</option>
+                            <option value="mashy">Mashy Pet</option>
+                            <option value="both">Both</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label for="filterFavorites">Favorites</label>
+                        <select id="filterFavorites" class="filter-select">
+                            <option value="all">All Combos</option>
+                            <option value="fav">⭐ Favorites Only</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label for="filterSort">Sort</label>
+                        <select id="filterSort" class="filter-select">
+                            <option value="name-asc">Name A-Z</option>
+                            <option value="name-desc">Name Z-A</option>
+                            <option value="tier-desc">Tier S→D</option>
+                            <option value="tier-asc">Tier D→S</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="filter-panel-footer">
+                    <button class="reset-btn-sm" id="resetFilters">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
+                            <polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/>
+                        </svg>
+                        Reset
+                    </button>
+                    <span class="filter-count" id="filterCount">No filters</span>
+                </div>
+            </div>
+        </div>
 
-      // Body
-      let bodyHTML = '';
+        <!-- More Menu -->
+        <div class="more-menu" id="moreMenu" hidden>
+            <button class="menu-item" id="viewToggle" aria-label="Toggle view">
+                <span class="menu-item-icon">
+                    <svg class="icon-grid" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/>
+                        <rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/>
+                    </svg>
+                    <svg class="icon-list" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/>
+                        <line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/>
+                    </svg>
+                </span>
+                <span class="menu-item-text" id="viewToggleText">Grid View</span>
+            </button>
+            <button class="menu-item" id="themeToggle" aria-label="Toggle theme">
+                <span class="menu-item-icon">
+                    <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+                    </svg>
+                    <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+                        <line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+                    </svg>
+                </span>
+                <span class="menu-item-text" id="themeToggleText">Dark Mode</span>
+            </button>
+        </div>
+    </header>
 
-      // Origin
-      if (item.origin) {
-        bodyHTML += `
-          <div class="modal-section-label">// origin</div>
-          <div class="origin-text">${item.origin}</div>`;
-      }
+    <main id="main-content">
+        <!-- Stats Bar -->
+        <section class="stats-bar" aria-label="Database statistics">
+            <div class="stats-inner" id="statsInner">
+                <span class="stat-item"><strong id="statTotal">0</strong> combos</span>
+                <span class="stat-sep">·</span>
+                <span class="stat-item"><strong id="statSTier">0</strong> S-Tier</span>
+                <span class="stat-sep">·</span>
+                <span class="stat-item"><strong id="statAnimash">0</strong> Animash</span>
+                <span class="stat-sep">·</span>
+                <span class="stat-item"><strong id="statMashy">0</strong> Mashy</span>
+                <span class="stat-sep">·</span>
+                <span class="stat-item"><strong id="statFav">0</strong> ⭐</span>
+            </div>
+        </section>
 
-      // Lore
-      if (item.lore) {
-        const paragraphs = item.lore.split('\n\n').map(p => `<p>${p}</p>`).join('');
-        bodyHTML += `
-          <div class="modal-section-label">// lore</div>
-          <div class="lore-text">${paragraphs}</div>`;
-      }
+        <!-- Results -->
+        <section class="results-section" aria-label="Combo results">
+            <div class="results-header">
+                <span id="resultsLabel">— <strong id="resultsCount">0</strong> results</span>
+            </div>
 
-      // Skills
-      if (item.skills && item.skills.length) {
-        bodyHTML += `<div class="modal-section-label">// skills</div>`;
-        bodyHTML += `<div class="skills-list">${item.skills.map(renderSkill).join('')}</div>`;
-      }
+            <div class="results-grid" id="resultsGrid" role="list">
+                <!-- Skeletons -->
+                <article class="combo-card skeleton" role="listitem" aria-hidden="true">
+                    <div class="skeleton-thumb"></div>
+                    <div class="skeleton-body">
+                        <div class="skeleton-title"></div>
+                        <div class="skeleton-meta"></div>
+                        <div class="skeleton-badges"></div>
+                    </div>
+                </article>
+                <article class="combo-card skeleton" role="listitem" aria-hidden="true">
+                    <div class="skeleton-thumb"></div>
+                    <div class="skeleton-body">
+                        <div class="skeleton-title"></div>
+                        <div class="skeleton-meta"></div>
+                        <div class="skeleton-badges"></div>
+                    </div>
+                </article>
+                <article class="combo-card skeleton" role="listitem" aria-hidden="true">
+                    <div class="skeleton-thumb"></div>
+                    <div class="skeleton-body">
+                        <div class="skeleton-title"></div>
+                        <div class="skeleton-meta"></div>
+                        <div class="skeleton-badges"></div>
+                    </div>
+                </article>
+                <article class="combo-card skeleton" role="listitem" aria-hidden="true">
+                    <div class="skeleton-thumb"></div>
+                    <div class="skeleton-body">
+                        <div class="skeleton-title"></div>
+                        <div class="skeleton-meta"></div>
+                        <div class="skeleton-badges"></div>
+                    </div>
+                </article>
+                <article class="combo-card skeleton" role="listitem" aria-hidden="true">
+                    <div class="skeleton-thumb"></div>
+                    <div class="skeleton-body">
+                        <div class="skeleton-title"></div>
+                        <div class="skeleton-meta"></div>
+                        <div class="skeleton-badges"></div>
+                    </div>
+                </article>
+                <article class="combo-card skeleton" role="listitem" aria-hidden="true">
+                    <div class="skeleton-thumb"></div>
+                    <div class="skeleton-body">
+                        <div class="skeleton-title"></div>
+                        <div class="skeleton-meta"></div>
+                        <div class="skeleton-badges"></div>
+                    </div>
+                </article>
+            </div>
 
-      modalBody.innerHTML = bodyHTML;
-      overlay.classList.add('open');
-      document.body.style.overflow = 'hidden';
-    }
+            <div class="load-more-wrap" id="loadMoreWrap">
+                <button class="load-more-btn" id="loadMoreBtn">
+                    <span class="btn-text">Load More</span>
+                    <span class="btn-count" id="loadMoreCount"></span>
+                </button>
+            </div>
 
-    function closeModal() {
-      overlay.classList.remove('open');
-      document.body.style.overflow = '';
-    }
+            <div class="empty-state" id="emptyState" hidden>
+                <div class="empty-icon">🔍</div>
+                <h2>No combos found</h2>
+                <p>Try searching for "lion", "dragon", or "S"</p>
+                <button class="reset-btn" id="resetEmpty">Reset all filters</button>
+            </div>
 
-    modalClose.addEventListener('click', closeModal);
-    overlay.addEventListener('click', e => { if (e.target === overlay) closeModal(); });
-    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
-  </script>
+            <div class="error-state" id="errorState" hidden>
+                <div class="empty-icon">⚠️</div>
+                <h2>Failed to load database</h2>
+                <p>Make sure <code>data.json</code> exists and is accessible</p>
+                <button class="reset-btn" id="retryLoad">Try Again</button>
+            </div>
+        </section>
+    </main>
+
+    <!-- Modal -->
+    <div class="modal-overlay" id="modalOverlay" role="dialog" aria-modal="true" aria-label="Combo details" hidden>
+        <div class="modal-sheet" id="modalSheet">
+            <div class="modal-header">
+                <div class="modal-thumb" id="modalThumb"></div>
+                <div class="modal-title-wrap">
+                    <h2 class="modal-name" id="modalName"></h2>
+                    <div class="modal-meta">
+                        <span class="modal-combo" id="modalCombo"></span>
+                        <span class="tier-badge" id="modalTier"></span>
+                        <span class="game-badge" id="modalGame"></span>
+                    </div>
+                </div>
+                <div class="modal-actions">
+                    <button class="modal-action-btn" id="modalFav" aria-label="Toggle favorite" title="Favorite">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                        </svg>
+                    </button>
+                    <button class="modal-action-btn" id="modalCopy" aria-label="Copy combo" title="Copy combo">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                        </svg>
+                    </button>
+                    <button class="modal-close" id="modalClose" aria-label="Close modal">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                            <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+            <div class="modal-body" id="modalBody"></div>
+            <div class="modal-footer">
+                <button class="modal-footer-btn" id="modalCopyCombo">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                    </svg>
+                    Copy Combo
+                </button>
+                <button class="modal-footer-btn secondary" id="modalShare">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+                        <circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/>
+                        <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
+                    </svg>
+                    Share
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Back to top -->
+    <button class="back-to-top" id="backToTop" aria-label="Back to top" hidden>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <polyline points="18 15 12 9 6 15"/>
+        </svg>
+    </button>
+
+    <!-- Toast -->
+    <div class="toast-container" id="toastContainer" aria-live="polite" aria-atomic="true"></div>
+
+    <footer class="site-footer">
+        <p>UACD · Ultimate Animash Combo Database · Community Data</p>
+        <p><a href="https://github.com/ArkadeNation29/uacd" target="_blank" rel="noopener">GitHub</a></p>
+    </footer>
+
+    <script src="assets/script.js" defer></script>
 </body>
 </html>
