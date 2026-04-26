@@ -1,0 +1,72 @@
+{
+  "id": 2,
+  "name": "Infernium",
+  "combo": [
+    "Uranium",
+    "Lava"
+  ],
+  "tier": "Common",
+  "image": "img/infernium.jpg",
+  "lore": "Infernium forms deep beneath the earth's crust, where volcanic activity meets rich uranium deposits, creating a rare and potent hybrid.\n\nDue to its unique composition, Infernium emits a low level of radiation combined with intense heat, making it a source of both energy and danger.",
+  "skills": [
+    {
+      "name": "Ember Strike",
+      "type": "skill1",
+      "target": "enemy",
+      "effects": [
+        "direct_hit"
+      ]
+    },
+    {
+      "name": "Heat Aura",
+      "type": "skill2",
+      "target": "self",
+      "effects": [
+        "buff",
+        "dot"
+      ]
+    },
+    {
+      "name": "Twin Flame",
+      "type": "special",
+      "hits": [
+        {
+          "target": "enemy",
+          "effects": [
+            "direct_hit",
+            "aoe"
+          ]
+        },
+        {
+          "target": "enemy",
+          "effects": [
+            "dot",
+            "nerf"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Inferno Nova",
+      "type": "ultra",
+      "hits": [
+        {
+          "target": "enemies",
+          "effects": [
+            "aoe",
+            "dot",
+            "stun"
+          ]
+        },
+        {
+          "target": "enemies",
+          "effects": [
+            "aoe",
+            "dot",
+            "nerf"
+          ]
+        }
+      ]
+    }
+  ]
+}

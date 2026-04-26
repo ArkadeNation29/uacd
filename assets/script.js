@@ -295,12 +295,54 @@
             if (abortController) abortController.abort();
             abortController = new AbortController();
 
-            const res = await fetch('data.json', { signal: abortController.signal });
-            if (!res.ok) throw new Error('Failed to load data.json');
-            const data = await res.json();
+            // Load manifest first
+            let manifestRes;
+            try {
+                manifestRes = await fetch('data/_index.json', { signal: abortController.signal });
+                if (!manifestRes.ok) throw new Error();
+            } catch {
+                // Fallback to old data.json
+                manifestRes = await fetch('data.json', { signal: abortController.signal });
+                if (!manifestRes.ok) throw new Error('Failed to load data');
+                const data = await manifestRes.json();
+                state.allCombos = data.combos || [];
+                state.comboMap = new Map(state.allCombos.map(c => [c.id, c]));
+                $$('.combo-card.skeleton').forEach(el => el.remove());
+                applyFilters();
+                updateStats();
+                updateFilterCount();
+                return;
+            }
 
-            state.allCombos = data.combos || [];
-            state.comboMap = new Map(state.allCombos.map(c => [c.id, c]));
+            const manifest = await manifestRes.json();
+            const filenames = manifest.combos || [];
+            if (filenames.length === 0) throw new Error('No combos in manifest');
+
+            // Load in batches to avoid blocking
+            const loaded = [];
+            for (let i = 0; i < filenames.length; i += CONFIG.BATCH_SIZE) {
+                const batch = filenames.slice(i, i + CONFIG.BATCH_SIZE);
+                const batchPromises = batch.map(async (filename) => {
+                    try {
+                        const res = await fetch(`data/${filename}`, { signal: abortController.signal });
+                        if (!res.ok) return null;
+                        return await res.json();
+                    } catch {
+                        console.warn(`Failed to load ${filename}`);
+                        return null;
+                    }
+                });
+                const batchResults = await Promise.all(batchPromises);
+                loaded.push(...batchResults.filter(Boolean));
+
+                // Yield to browser between batches
+                if (i + CONFIG.BATCH_SIZE < filenames.length) {
+                    await new Promise(r => requestAnimationFrame(r));
+                }
+            }
+
+            state.allCombos = loaded;
+            state.comboMap = new Map(loaded.map(c => [c.id, c]));
 
             $$('.combo-card.skeleton').forEach(el => el.remove());
 
