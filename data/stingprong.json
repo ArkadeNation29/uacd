@@ -28,21 +28,20 @@ floor and its unique method of capturing prey by utilizing its fork like appenda
       ]
     },
     {
-      "name": "Twin Flame",
+      "name": "Prong Paralysis",
       "type": "special",
       "hits": [
         {
           "target": "enemy",
           "effects": [
-            "direct_hit",
-            "aoe"
+            "nerf", # acc-2
+            "stun"
           ]
         },
         {
           "target": "enemy",
           "effects": [
-            "dot",
-            "nerf"
+            "dot"
           ]
         }
       ]
