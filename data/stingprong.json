@@ -11,7 +11,7 @@
 floor and its unique method of capturing prey by utilizing its fork like appendages. They have been mentioned in ancient folklore usually associated with sea gods due to their faint magical qualities.",
   "skills": [
     {
-      "name": "Ember Strike",
+      "name": "Barbed Barrage",
       "type": "skill1",
       "target": "enemy",
       "effects": [
@@ -19,12 +19,11 @@ floor and its unique method of capturing prey by utilizing its fork like appenda
       ]
     },
     {
-      "name": "Heat Aura",
+      "name": "Trident Torrent",
       "type": "skill2",
       "target": "self",
       "effects": [
-        "buff",
-        "dot"
+        "aoe"
       ]
     },
     {
@@ -34,7 +33,7 @@ floor and its unique method of capturing prey by utilizing its fork like appenda
         {
           "target": "enemy",
           "effects": [
-            "nerf", # acc-2
+            "nerf_acc_2",
             "stun"
           ]
         },
@@ -47,23 +46,19 @@ floor and its unique method of capturing prey by utilizing its fork like appenda
       ]
     },
     {
-      "name": "Inferno Nova",
+      "name": "",
       "type": "ultra",
       "hits": [
         {
           "target": "enemies",
           "effects": [
-            "aoe",
-            "dot",
-            "stun"
+            ""
           ]
         },
         {
           "target": "enemies",
           "effects": [
-            "aoe",
-            "dot",
-            "nerf"
+            ""
           ]
         }
       ]
