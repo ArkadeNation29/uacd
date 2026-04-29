@@ -882,7 +882,7 @@
         init();
     }
 })();
-=======
+
 /**
  * UACD v2 - Ultimate Animash Combo Database
  * Minimalist, fast, accessible
@@ -1767,4 +1767,4 @@
         init();
     }
 })();
->>>>>>> 8632551160e0d2ab3f4a4895b293f7f87354d4b6
+// 8632551160e0d2ab3f4a4895b293f7f87354d4b6
