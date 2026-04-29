@@ -303,7 +303,7 @@
                 if (!manifestRes.ok) throw new Error();
             } catch {
                 // Fallback to old data.json
-                manifestRes = await fetch('data.json', { signal: abortController.signal });
+                manifestRes = await fetch('../data.json', { signal: abortController.signal });
                 if (!manifestRes.ok) throw new Error('Failed to load data');
                 const data = await manifestRes.json();
                 state.allCombos = data.combos || [];
@@ -1184,11 +1184,11 @@
             // Load manifest first
             let manifestRes;
             try {
-                manifestRes = await fetch('data/_index.json', { signal: abortController.signal });
+                manifestRes = await fetch('../data/index.json', { signal: abortController.signal });
                 if (!manifestRes.ok) throw new Error();
             } catch {
                 // Fallback to old data.json
-                manifestRes = await fetch('data.json', { signal: abortController.signal });
+                manifestRes = await fetch('../data.json', { signal: abortController.signal });
                 if (!manifestRes.ok) throw new Error('Failed to load data');
                 const data = await manifestRes.json();
                 state.allCombos = data.combos || [];
