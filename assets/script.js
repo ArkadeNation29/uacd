@@ -298,11 +298,11 @@
             // Load manifest first
             let manifestRes;
             try {
-                manifestRes = await fetch('../data/index.json', { signal: abortController.signal });
+                manifestRes = await fetch('./data/index.json', { signal: abortController.signal });
                 if (!manifestRes.ok) throw new Error();
             } catch {
                 // Fallback to old data.json
-                manifestRes = await fetch('../data.json', { signal: abortController.signal });
+                manifestRes = await fetch('./data.json', { signal: abortController.signal });
                 if (!manifestRes.ok) throw new Error('Failed to load data');
                 const data = await manifestRes.json();
                 state.allCombos = data.combos || [];
@@ -324,7 +324,7 @@
                 const batch = filenames.slice(i, i + CONFIG.BATCH_SIZE);
                 const batchPromises = batch.map(async (filename) => {
                     try {
-                        const res = await fetch(`data/${filename}`, { signal: abortController.signal });
+                        const res = await fetch(`./data/${filename}`, { signal: abortController.signal });
                         if (!res.ok) return null;
                         return await res.json();
                     } catch {
@@ -1183,11 +1183,11 @@
             // Load manifest first
             let manifestRes;
             try {
-                manifestRes = await fetch('../data/index.json', { signal: abortController.signal });
+                manifestRes = await fetch('./data/index.json', { signal: abortController.signal });
                 if (!manifestRes.ok) throw new Error();
             } catch {
                 // Fallback to old data.json
-                manifestRes = await fetch('../data.json', { signal: abortController.signal });
+                manifestRes = await fetch('./data.json', { signal: abortController.signal });
                 if (!manifestRes.ok) throw new Error('Failed to load data');
                 const data = await manifestRes.json();
                 state.allCombos = data.combos || [];
@@ -1209,7 +1209,7 @@
                 const batch = filenames.slice(i, i + CONFIG.BATCH_SIZE);
                 const batchPromises = batch.map(async (filename) => {
                     try {
-                        const res = await fetch(`data/${filename}`, { signal: abortController.signal });
+                        const res = await fetch(`./data/${filename}`, { signal: abortController.signal });
                         if (!res.ok) return null;
                         return await res.json();
                     } catch {
