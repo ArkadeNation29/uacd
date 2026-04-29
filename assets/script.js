@@ -299,7 +299,7 @@
             // Load manifest first
             let manifestRes;
             try {
-                manifestRes = await fetch('data/index.json', { signal: abortController.signal });
+                manifestRes = await fetch('../data/index.json', { signal: abortController.signal });
                 if (!manifestRes.ok) throw new Error();
             } catch {
                 // Fallback to old data.json
