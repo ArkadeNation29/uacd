@@ -1,0 +1,67 @@
+{
+  "id": 4,
+  "name": "stingprong",
+  "combo": [
+    "Stringray",
+    "Fork"
+  ],
+  "tier": "Common",
+  "image": "img/stingprong.jpg",
+  "lore": "The Stingprong is an elusive creature known for its ability to blend seamlessly into the ocean
+floor and its unique method of capturing prey by utilizing its fork like appendages. They have been mentioned in ancient folklore usually associated with sea gods due to their faint magical qualities.",
+  "skills": [
+    {
+      "name": "Barbed Barrage",
+      "type": "skill1",
+      "target": "enemy",
+      "effects": [
+        "direct_hit"
+      ]
+    },
+    {
+      "name": "Trident Torrent",
+      "type": "skill2",
+      "target": "self",
+      "effects": [
+        "aoe"
+      ]
+    },
+    {
+      "name": "Prong Paralysis",
+      "type": "special",
+      "hits": [
+        {
+          "target": "enemy",
+          "effects": [
+            "nerf_acc_2",
+            "stun"
+          ]
+        },
+        {
+          "target": "enemy",
+          "effects": [
+            "dot"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "",
+      "type": "ultra",
+      "hits": [
+        {
+          "target": "enemies",
+          "effects": [
+            ""
+          ]
+        },
+        {
+          "target": "enemies",
+          "effects": [
+            ""
+          ]
+        }
+      ]
+    }
+  ]
+}
