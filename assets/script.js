@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 /**
  * UACD v2 - Ultimate Animash Combo Database
  * Minimalist, fast, accessible
