@@ -50,15 +50,15 @@
       "type": "ultra",
       "hits": [
         {
-          "target": "enemies",
+          "target": "self",
           "effects": [
-            ""
+            "buff_crit_3"
           ]
         },
         {
           "target": "enemies",
           "effects": [
-            ""
+            "dot"
           ]
         }
       ]

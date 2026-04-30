@@ -7,10 +7,11 @@
   ],
   "tier": "Common",
   "image": "img/infernium.jpg",
+  "origin": "This material can only be found in Chernobyl, Ukraine. Where geological and nuclear factors have inadvertently contributed to its formation deep underground in radioactive lava pools",
   "lore": "Infernium forms deep beneath the earth's crust, where volcanic activity meets rich uranium deposits, creating a rare and potent hybrid.\n\nDue to its unique composition, Infernium emits a low level of radiation combined with intense heat, making it a source of both energy and danger.",
   "skills": [
     {
-      "name": "Ember Strike",
+      "name": "Meltdown Surge",
       "type": "skill1",
       "target": "enemy",
       "effects": [
@@ -18,52 +19,45 @@
       ]
     },
     {
-      "name": "Heat Aura",
+      "name": "Lava Shield",
       "type": "skill2",
       "target": "self",
       "effects": [
-        "buff",
-        "dot"
+        "buff_deff_1"
       ]
     },
     {
-      "name": "Twin Flame",
+      "name": "Radiant Warmth",
       "type": "special",
       "hits": [
         {
-          "target": "enemy",
+          "target": "team",
           "effects": [
-            "direct_hit",
-            "aoe"
+            "heal"
           ]
         },
         {
           "target": "enemy",
           "effects": [
-            "dot",
-            "nerf"
+            "dot"
           ]
         }
       ]
     },
     {
-      "name": "Inferno Nova",
+      "name": "Atomic Inferno Burst",
       "type": "ultra",
       "hits": [
         {
           "target": "enemies",
           "effects": [
-            "aoe",
-            "dot",
-            "stun"
+            ""
           ]
         },
         {
           "target": "enemies",
           "effects": [
-            "aoe",
-            "dot",
-            "nerf"
+            ""
           ]
         }
       ]
