@@ -1,14 +1,14 @@
 {
   "id": 4,
-  "name": "stingprong",
+  "name": "Stingprong",
   "combo": [
-    "Stringray",
+    "Stingray",
     "Fork"
   ],
   "tier": "Common",
   "image": "img/stingprong.jpg",
-  "lore": "The Stingprong is an elusive creature known for its ability to blend seamlessly into the ocean
-floor and its unique method of capturing prey by utilizing its fork like appendages. They have been mentioned in ancient folklore usually associated with sea gods due to their faint magical qualities.",
+  "origin": "Coral reefs off the coasts of Australia and Indonesia.",
+  "lore": "The Stingprong is an elusive creature known for its ability to blend seamlessly into the ocean floor and its unique method of capturing prey by utilizing its fork like appendages. They have been mentioned in ancient folklore usually associated with sea gods due to their faint magical qualities.",
   "skills": [
     {
       "name": "Barbed Barrage",
@@ -21,7 +21,7 @@ floor and its unique method of capturing prey by utilizing its fork like appenda
     {
       "name": "Trident Torrent",
       "type": "skill2",
-      "target": "self",
+      "target": "enemy",
       "effects": [
         "aoe"
       ]
@@ -46,7 +46,7 @@ floor and its unique method of capturing prey by utilizing its fork like appenda
       ]
     },
     {
-      "name": "",
+      "name": "Pulsating Voltage Vortex",
       "type": "ultra",
       "hits": [
         {

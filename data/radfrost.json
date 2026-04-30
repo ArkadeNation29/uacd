@@ -62,17 +62,19 @@
         {
           "target": "enemies",
           "effects": [
-            "aoe",
-            "dot",
-            "stun"
+            "dot"
           ]
         },
         {
-          "target": "enemies",
+          "target": "self",
           "effects": [
-            "aoe",
-            "dot",
-            "nerf"
+            "buff_acc_2"
+          ]
+        }
+        {
+          "target": "self",
+          "effects": [
+            "buff_crit_1"
           ]
         }
       ]
