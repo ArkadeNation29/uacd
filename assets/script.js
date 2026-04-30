@@ -284,6 +284,45 @@
     }
 
     // ============================
+    // Data Normalization
+    // ============================
+    function normalizeCombo(raw) {
+        return {
+            ...raw,
+            // id always string for consistent Map lookups
+            id: String(raw.id),
+            // combo: array ["A","B"] → "A + B", or keep as-is if already string
+            combo: Array.isArray(raw.combo) ? raw.combo.join(' + ') : (raw.combo || ''),
+            // thumbnail: data uses "image" field, script uses "thumbnail"
+            thumbnail: raw.thumbnail || raw.image || '',
+            // skills: normalize slot (data uses "type") and flatten hits into effects
+            skills: (raw.skills || []).filter(s => s.name).map(skill => {
+                const hits = skill.hits || [{ target: skill.target, effects: skill.effects || [] }];
+                return {
+                    ...skill,
+                    slot: skill.slot || skill.type || 'skill',
+                    target: hits[0]?.target || skill.target || 'enemy',
+                    effects: hits.flatMap(h =>
+                        (h.effects || []).filter(Boolean).map(fx => ({
+                            emoji: effectEmoji(fx),
+                            stat: fx,
+                        }))
+                    ),
+                };
+            }),
+        };
+    }
+
+    function effectEmoji(fx) {
+        const map = {
+            direct_hit: '⚔️', aoe: '💥', dot: '🔥', buff: '⬆️',
+            nerf: '⬇️', stun: '💫', buff_atk_3: '⚔️⬆️', buff_def_1: '🛡️⬆️',
+            nerf_dodge_3: '🎯⬇️', nerf_acc_2: '👁️⬇️',
+        };
+        return map[fx] || '✨';
+    }
+
+    // ============================
     // Data Loading
     // ============================
     async function loadData() {
@@ -305,8 +344,9 @@
                 manifestRes = await fetch('./data.json', { signal: abortController.signal });
                 if (!manifestRes.ok) throw new Error('Failed to load data');
                 const data = await manifestRes.json();
-                state.allCombos = data.combos || [];
-                state.comboMap = new Map(state.allCombos.map(c => [c.id, c]));
+                const raw = Array.isArray(data) ? data : (data.combos || []);
+                state.allCombos = raw.map(normalizeCombo);
+                state.comboMap = new Map(state.allCombos.map(c => [String(c.id), c]));
                 $$('.combo-card.skeleton').forEach(el => el.remove());
                 applyFilters();
                 updateStats();
@@ -341,8 +381,8 @@
                 }
             }
 
-            state.allCombos = loaded;
-            state.comboMap = new Map(loaded.map(c => [c.id, c]));
+            state.allCombos = loaded.map(normalizeCombo);
+            state.comboMap = new Map(state.allCombos.map(c => [c.id, c]));
 
             $$('.combo-card.skeleton').forEach(el => el.remove());
 
