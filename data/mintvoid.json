@@ -16,20 +16,20 @@
     {
       "name": "Accretion Foam",
       "type": "skill2",
-      "target": "enemy",
-      "effects": [""]
+      "target": "team",
+      "effects": ["buff_def_1", "buff_dodge_1"]
     },
     {
       "name": "Singularity Swirl",
       "type": "special",
       "hits": [
         {
-          "target": "",
-          "effects": [""]
+          "target": "enemies",
+          "effects": ["nerf_dodge_1", "nerf_def_1", "dot"]
         },
         {
-          "target": "",
-          "effects": [""]
+          "target": "enemies",
+          "effects": ["timer"]
         }
       ]
     },
@@ -38,12 +38,12 @@
       "type": "ultra",
       "hits": [
         {
-          "target": "enemies",
-          "effects": [""]
+          "target": "self",
+          "effects": ["buff_atk_1", "purify"]
         },
         {
-          "target": "enemies",
-          "effects": [""]
+          "target": "enemy",
+          "effects": ["trap"]
         }
       ]
     }
