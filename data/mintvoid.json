@@ -1,0 +1,51 @@
+{
+  "id": 2,
+  "name": "Mintvoid",
+  "combo": ["Toothpaste", "Black Hole"],
+  "tier": "Supreme",
+  "image": "img/mintvoid.jpg",
+  "origin": "Chile, in ultra-dry, fluoride-laced salt caves beneath the Atacama Desert's dark-sky observatories",
+  "lore": "Mintvoid is a thixotropic, mint-cooled compound that spawns a bounded micro-singularity, drawing in plaque, odor molecules, and stray particulates while capping tidal forces at enamel-safe levels.\n\nDeveloped when a fluoride crystal matrix was used to quench Hawking noise in a tabletop analogue black hole, it quickly gained fame among observatory crews for cleaning both teeth and delicate optics without residue.\n\nFolklore among night-shift astronomers claims it shortens the 'half-life' of coffee breath and late-hour fatigue.",
+  "skills": [
+    {
+      "name": "Horizon Rinse",
+      "type": "skill1",
+      "target": "enemy",
+      "effects": ["direct_hit"]
+    },
+    {
+      "name": "Accretion Foam",
+      "type": "skill2",
+      "target": "enemy",
+      "effects": [""]
+    },
+    {
+      "name": "Singularity Swirl",
+      "type": "special",
+      "hits": [
+        {
+          "target": "",
+          "effects": [""]
+        },
+        {
+          "target": "",
+          "effects": [""]
+        }
+      ]
+    },
+    {
+      "name": "Event Horizon Polish",
+      "type": "ultra",
+      "hits": [
+        {
+          "target": "enemies",
+          "effects": [""]
+        },
+        {
+          "target": "enemies",
+          "effects": [""]
+        }
+      ]
+    }
+  ]
+}
